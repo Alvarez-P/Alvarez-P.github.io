@@ -10,10 +10,10 @@
 --------------------------------------------------------------*/
 :root {
   --dark-color: #0e0e0e;
-  --dark-second-color: #007899;
-  --contrast-color: #03a8d6;
-  --light-color: #01c1f7;
-  --light-second-color: #00c8ff;
+  --dark-second-color: #0f634e;
+  --contrast-color: #189979;
+  --light-color: #21c098;
+  --light-second-color: #2effcb;
 }
 
 body {
@@ -532,7 +532,7 @@ section {
   margin: 0 auto 35px auto;
   list-style: none;
   text-align: center;
-  background: #fff;
+  background: rgb(231, 230, 230);
   border-radius: 50px;
   padding: 2px 15px;
 }
