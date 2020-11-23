@@ -10,10 +10,10 @@
 --------------------------------------------------------------*/
 :root {
   --dark-color: #0e0e0e;
-  --dark-second-color: #0f634e;
+  --second-dark-color: #0f634e;
   --contrast-color: #189979;
   --light-color: #21c098;
-  --light-second-color: #2effcb;
+  --second-light-color: #2effcb;
 }
 
 body {
@@ -315,7 +315,7 @@ section {
   margin-bottom: 20px;
   padding-bottom: 20px;
   position: relative;
-  color: var(--dark-second-color);
+  color: var(--second-dark-color);
 }
 
 .section-title h2::after {
@@ -339,7 +339,7 @@ section {
 .about .content h3 {
   font-weight: 700;
   font-size: 26px;
-  color: var(--dark-second-color);
+  color: var(--second-dark-color);
 }
 
 .about .content ul {
@@ -479,12 +479,17 @@ section {
 
 .resume .resume-item h4 {
   line-height: 18px;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   text-transform: uppercase;
   font-family: "Poppins", sans-serif;
   color: var(--contrast-color);
   margin-bottom: 10px;
+}
+.resume h4 {
+  font-size: 25px;
+  color: var(--contrast-color);
+  margin-bottom: 15px;
 }
 
 .resume .resume-item h5 {
@@ -517,7 +522,7 @@ section {
   left: -9px;
   top: 0;
   background: #fff;
-  border: 2px solid var(--dark-second-color);
+  border: 2px solid var(--second-dark-color);
 }
 
 /*--------------------------------------------------------------
