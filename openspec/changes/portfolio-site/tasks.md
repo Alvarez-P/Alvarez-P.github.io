@@ -57,9 +57,9 @@ Chain strategy: stacked-to-main
 
 ## Phase 4: MDX Content Batch 1 (full content — pending)
 
-- [ ] 4.1 Write `src/content/projects/infotec.mdx` — placeholder created
-- [ ] 4.2 Write `src/content/projects/happyguest.mdx` — placeholder created
-- [ ] 4.3 Write `src/content/projects/derby.mdx` — placeholder created
+- [x] 4.1 Write `src/content/projects/infotec.mdx` — full case study with C4 diagram, rich frontmatter, 5 sections
+- [x] 4.2 Write `src/content/projects/happyguest.mdx` — full case study with C4 diagram, rich frontmatter, 5 sections
+- [x] 4.3 Write `src/content/projects/derby.mdx` — full case study with C4 diagram, rich frontmatter, 5 sections
 
 ## Phase 5: MDX Content Batch 2 (full content — pending)
 

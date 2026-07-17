@@ -1,57 +1,169 @@
 ---
-title: "Plataforma de Gestión Hotelera"
+title: "Arquitectura Serverless Event-Driven"
 company: "HappyGuest"
 period:
-  start: 2022-03-01
-  end: 2023-12-01
-role: "Backend Developer"
-description: "Arquitectura serverless para ERP hotelero — módulos de reservas, facturación electrónica CFDI 4.0, y canales de venta conectados vía API."
+  start: 2022-02-01
+  end: 2023-01-01
+role: "Cloud Architect & Backend Developer"
+description: "Diseñé, desarrollé y desplegué una arquitectura completamente serverless sobre AWS para aplicaciones orientadas a eventos, utilizando Infrastructure as Code con CDK y TypeScript, integrando más de 10 servicios del ecosistema AWS."
 techStack:
-  - Node.js
+  - AWS CDK
   - TypeScript
-  - AWS
+  - AWS Lambda
+  - API Gateway
   - DynamoDB
-  - Serverless
-  - SQS
+  - RDS
+  - EventBridge
+  - CloudWatch
+  - Cognito
+  - IAM
+  - SNS
+  - SES
+  - GitHub Actions
+  - Git
 tags:
   - backend
   - serverless
   - aws
-  - erp
-  - cdfi
+  - event-driven
+  - infrastructure-as-code
+  - cloud-architecture
+  - typescript
 metrics:
-  - label: "Facturas/mes"
-    value: "15K+"
+  - label: "Servicios AWS integrados"
+    value: "10+"
     direction: "up"
-  - label: "Latencia API"
-    value: "<200ms"
+  - label: "Eventos procesados/día"
+    value: "100k+"
+    direction: "up"
+  - label: "Deploy completo"
+    value: "< 5 min"
     direction: "down"
-  - label: "Canales conectados"
-    value: "5"
-    direction: "up"
 featured: false
 order: 2
 published: true
 ---
 
-Contenido en desarrollo.
+import MermaidDiagram from '../../components/MermaidDiagram.astro';
 
 ## Contexto y problema
 
-Descripción del contexto y problema a resolver. Contenido próximo.
+HappyGuest operaba en el sector hospitality — una plataforma de experiencia huésped que conectaba hoteles con sus visitantes. El backend existente enfrentaba una disyuntiva: la carga era altamente variable (picos en temporada alta, valles en temporada baja), el equipo era pequeño (3 developers), y el presupuesto de infraestructura era ajustado para una startup en crecimiento.
+
+La pregunta era: ¿cómo construir un backend escalable, resiliente y observable sin un equipo de ops dedicado y sin pagar por capacidad ociosa?
+
+La respuesta fue serverless. No como moda, sino como decisión económica y operativa. Con Lambda y API Gateway, pagábamos por petición, no por servidor. Con AWS CDK, toda la infraestructura era código revisable en PRs. Con EventBridge, los servicios se comunicaban sin acoplamiento temporal ni espacial.
+
+<MermaidDiagram code={`C4Context
+  title Arquitectura Serverless — HappyGuest
+
+  Person(cliente, "Cliente", "Usa la aplicación")
+  Person(admin, "Admin", "Gestiona el sistema")
+
+  System_Boundary(aws, "AWS Cloud") {
+    Container(cognito, "Auth", "Cognito + IAM", "Autenticación y autorización")
+    Container(api, "API Gateway", "REST + WebSocket", "Puerta de entrada serverless")
+    Container(fn1, "Lambda — Core", "TypeScript", "Lógica de negocio principal")
+    Container(fn2, "Lambda — Notifications", "TypeScript", "Notificaciones programadas")
+    Container(fn3, "Lambda — Events", "TypeScript", "Procesamiento de eventos")
+    Container(eventbus, "EventBridge", "Bus de eventos", "Comunicación asíncrona")
+    ContainerDb(ddb, "DynamoDB", "NoSQL", "Datos operacionales")
+    ContainerDb(rds, "RDS", "PostgreSQL", "Datos relacionales")
+    Container(monitor, "CloudWatch", "Logs + Métricas", "Observabilidad")
+    Container(sns, "SNS + SES", "Notificaciones", "Email y push")
+  }
+
+  Rel(cliente, api, "HTTPS", "REST/WebSocket")
+  Rel(admin, api, "HTTPS", "Gestión")
+  Rel(api, cognito, "Valida token", "JWT")
+  Rel(api, fn1, "Invoca", "Lambda")
+  Rel(fn1, ddb, "Lee/Escribe", "DynamoDB")
+  Rel(fn1, rds, "Consulta", "SQL")
+  Rel(fn1, eventbus, "Publica eventos", "EventBridge")
+  Rel(eventbus, fn3, "Dispara", "EventBridge Rule")
+  Rel(eventbus, fn2, "Dispara programado", "CloudWatch Events")
+  Rel(fn2, sns, "Envía", "SNS → SES")
+  Rel(fn1, monitor, "Logs + Métricas", "CloudWatch")`} />
 
 ## Decisiones de arquitectura
 
-Diagrama y decisiones de arquitectura. Contenido próximo.
+### Serverless-first desde el día uno
+
+Lambda + API Gateway fueron la columna vertebral. La decisión fue deliberada: en un equipo pequeño sin DevOps dedicado, no administrar servidores era una ventaja competitiva, no una limitación. El escalado automático de Lambda manejaba desde 10 peticiones/día en temporada baja hasta picos de miles por minuto sin intervención — cero configuraciones de auto-scaling groups, cero alarmas de capacidad.
+
+Los trade-offs eran conocidos: **cold starts** (especialmente en VPC) y el **límite de 15 minutos** de ejecución. Los mitigamos con *Provisioned Concurrency* para las Lambdas críticas del API Gateway y diseñando los procesos batch para completarse dentro de la ventana de 15 minutos. Para procesos más largos, partimos el trabajo en Lambdas encadenadas con Step Functions.
+
+### Infrastructure as Code con AWS CDK
+
+CDK nos permitió definir infraestructura en TypeScript — el mismo lenguaje del código de aplicación. Esto eliminó la barrera mental de escribir YAML/JSON de CloudFormation y nos dio:
+
+- **Constructos reutilizables**: una función `createApiLambda` que configuraba Lambda, API Gateway, permisos IAM, y logging en una sola llamada.
+- **Seguridad tipada**: errores de configuración (nombres de recursos, ARNs incorrectos) se detectaban en compilación, no en deploy.
+- **Diff antes de deploy**: `cdk diff` en cada PR mostraba exactamente qué recursos se crearían, modificarían o eliminarían.
+
+### Event-Driven con EventBridge
+
+En lugar de que los servicios se llamaran directamente (acoplamiento síncrono), cada Lambda publicaba eventos en EventBridge y otras Lambdas los consumían mediante reglas. Por ejemplo:
+
+- **Lambda Core** procesaba una reserva y publicaba `reserva.creada`
+- **Lambda Notificaciones** respondía al evento `reserva.creada` y enviaba un email vía SES
+- **Lambda Analytics** consumía el mismo evento y actualaba métricas en DynamoDB
+
+Ninguna de estas Lambdas se conocían entre sí. El bus de eventos era el único contrato compartido. Esto permitió añadir nuevos consumidores (por ejemplo, un webhook a un CRM) sin modificar el publicador original.
+
+### DynamoDB para datos operacionales, RDS para relacionales
+
+Adoptamos una estrategia híbrida de almacenamiento: DynamoDB con *single-table design* para el core de alta velocidad (sesiones de usuario, reservas activas, colas de procesamiento), y PostgreSQL en RDS para datos que requerían joins y transacciones ACID (facturación, reportes financieros, configuraciones complejas).
+
+La clave fue definir **patrones de acceso** antes de diseñar las tablas de DynamoDB — algo que suena obvio pero que muchos equipos omiten. Cada consulta conocida se mapeó a una combinación PK/SK o a un GSI. El resultado: consultas de milisegundos en DynamoDB incluso con millones de registros.
+
+### Cognito + IAM para autenticación
+
+Cognito manejó todo el ciclo de autenticación — registro, confirmación, recuperación de contraseña, MFA — sin escribir una línea de código de auth en las Lambdas. Cada Lambda recibía el token JWT ya validado por API Gateway (usando un *Cognito Authorizer*), y los roles IAM con mínimo privilegio garantizaban que cada función solo pudiera acceder a los recursos que necesitaba.
+
+### CI/CD con GitHub Actions
+
+La pipeline de CI/CD tenía dos fases:
+
+1. **Infraestructura**: `cdk diff` generaba un plan de cambios visible en la PR. Tras aprobación, `cdk deploy` actualizaba el stack de CloudFormation.
+2. **Código**: Las Lambdas se empaquetaban con esbuild (eliminando `node_modules` innecesarios para reducir el tamaño del zip) y se desplegaban mediante `aws lambda update-function-code`.
+
+El deploy completo (infraestructura + código) tomaba menos de 5 minutos.
 
 ## Implementación clave
 
-Detalles de implementación y fragmentos de código. Contenido próximo.
+### Single-Table Design en DynamoDB
+
+El diseño de DynamoDB fue probablemente la decisión técnica más impactante. Usamos una sola tabla con claves compuestas:
+
+```typescript
+// Clave primaria compuesta
+PK: `USER#${userId}`           // Partition key
+SK: `RESERVATION#${reservationId}`  // Sort key
+
+// GSIs para otros patrones de acceso
+GSI1PK: `HOTEL#${hotelId}`     // Query reservas por hotel
+GSI1SK: `STATUS#${status}#${createdAt}`
+```
+
+Este diseño permitía todas las consultas críticas con una sola lectura: "todas las reservas de un usuario", "todas las reservas de un hotel filtradas por estado", "usuarios activos en las últimas 24 horas". Sin joins, sin índices secundarios costosos — solo acceso directo por clave.
+
+### Pipelines CI/CD con diff visible
+
+El flujo de trabajo de GitHub Actions incluía un paso de `cdk diff` que se ejecutaba automáticamente en cada PR. El resultado se publicaba como comentario en la PR, permitiendo al revisor ver exactamente qué recursos de AWS cambiarían antes de aprobar. Esto transformó las revisiones de infraestructura de "confía en mí" a "mira el diff y decide".
 
 ## Resultados
 
-Métricas y resultados obtenidos. Contenido próximo.
+- **Arquitectura 100% serverless**: cero servidores que mantener, cero costos por capacidad ociosa.
+- **Infraestructura como código**: todo el stack de AWS versionado, revisable y desplegable en < 5 minutos.
+- **Escalado automático**: picos de tráfico manejados sin intervención manual, sin alarmas de capacidad.
+- **Observabilidad completa**: logs centralizados en CloudWatch, métricas por Lambda, alarmas configuradas para errores y latencia.
+- **Colaboración eficiente**: el equipo de 3 developers podía desplegar cambios a producción múltiples veces al día con confianza.
 
 ## Lecciones aprendidas
 
-Lecciones y aprendizajes del proyecto. Contenido próximo.
+Los cold starts de Lambda son reales, especialmente en Lambdas dentro de VPC (donde la inicialización del ENI añade segundos). Para las API críticas, *Provisioned Concurrency* elimina el problema — pero tiene un costo. La lección: medir el % de cold starts en producción y decidir por ruta, no por dogma.
+
+El *single-table design* de DynamoDB es extraordinariamente eficiente, pero migrar el modelo después de miles de registros es doloroso. Los patrones de acceso deben definirse antes de escribir la primera línea de código — cambiar el modelo después implica migraciones de datos, escritura de nuevos GSIs, y coordinación de deploys.
+
+CDK es una herramienta excelente, pero el estado de CloudFormation puede ser frágil. Una actualización fallida puede dejar el stack en estado `ROLLBACK_COMPLETE` y requerir intervención manual. La lección: `cdk diff` siempre antes de deploy, y considerar stacks separados por contexto (core, red, datos) para reducir el radio de explosión de fallos.

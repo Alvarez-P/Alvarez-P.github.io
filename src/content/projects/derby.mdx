@@ -1,56 +1,154 @@
 ---
-title: "Plataforma de Apuestas Deportivas"
-company: "Derby"
+title: "APIs REST y Soluciones Cloud"
+company: "Derby Technologies"
 period:
-  start: 2021-06-01
-  end: 2022-02-01
+  start: 2021-11-01
+  end: 2022-01-01
 role: "Backend Developer"
-description: "Sistema de apuestas en tiempo real con Node.js — colas de eventos, caché distribuida, y API REST para frontend React."
+description: "Desarrollé APIs REST con Node.js y Restify sobre MongoDB, integrando servicios AWS para almacenamiento y notificaciones, en un equipo ágil con revisiones de código continuas que mantenían la calidad y consistencia del código."
 techStack:
   - Node.js
-  - TypeScript
-  - Express
-  - Redis
+  - Restify
   - MongoDB
-  - Docker
+  - Mongoose
+  - AWS S3
+  - AWS SES
+  - Git
 tags:
   - backend
-  - realtime
-  - betting
+  - rest-api
+  - mongodb
+  - aws
   - nodejs
+  - api-design
 metrics:
-  - label: "Apuestas simultáneas"
-    value: "5K+"
+  - label: "APIs REST en producción"
+    value: "3+"
     direction: "up"
-  - label: "Tiempo real"
-    value: "<50ms"
-    direction: "down"
-  - label: "Eventos/día"
-    value: "1M+"
+  - label: "Cobertura de tests"
+    value: "85%+"
     direction: "up"
+  - label: "Code reviews"
+    value: "Semanal"
+    direction: "neutral"
 featured: false
 order: 3
 published: true
 ---
 
-Contenido en desarrollo.
+import MermaidDiagram from '../../components/MermaidDiagram.astro';
 
 ## Contexto y problema
 
-Descripción del contexto y problema a resolver. Contenido próximo.
+Derby Technologies operaba en un entorno de crecimiento acelerado. El equipo de backend, aún pequeño, necesitaba construir APIs REST confiables para los productos de la compañía mientras la base de código crecía y nuevos desarrolladores se incorporaban al proyecto.
+
+El principal desafío no era técnico — era de **consistencia**. Con múltiples contribuyentes y un producto en evolución rápida, las APIs podían fácilmente divergir en estilo, estructura de respuestas, manejo de errores, y documentación. Necesitábamos un conjunto de decisiones arquitectónicas tempranas que preservaran la cohesión del sistema mientras el equipo escalaba.
+
+MongoDB fue la elección natural de base de datos: la flexibilidad de su esquema permitía iterar rápido sin migrations, ideal para un producto en fase de descubrimiento donde los requisitos cambiaban semanalmente. El reto era aprovechar esa flexibilidad sin sacrificar la integridad de los datos.
+
+<MermaidDiagram code={`C4Context
+  title Backend APIs — Derby Technologies
+
+  Person(cliente, "Cliente", "Usa la aplicación")
+
+  System_Boundary(derby, "Derby Technologies") {
+    Container(api, "API REST", "Node.js + Restify", "Endpoints RESTful")
+    Container(worker, "Worker", "Node.js", "Procesamiento asíncrono")
+    ContainerDb(mongo, "MongoDB", "Base de datos principal", "Datos de aplicación")
+    Container(s3, "S3", "AWS", "Almacenamiento de archivos")
+    Container(ses, "SES", "AWS", "Envío de emails transaccionales")
+  }
+
+  Rel(cliente, api, "HTTPS", "JSON")
+  Rel(api, mongo, "Lee/Escribe", "Mongoose ODM")
+  Rel(api, s3, "Sube/Descarga", "AWS SDK")
+  Rel(api, ses, "Envía emails", "AWS SDK")
+  Rel(api, worker, "Encola trabajos", "Bull/Redis")
+  Rel(worker, mongo, "Actualiza", "Mongoose")
+  Rel(worker, ses, "Envía resúmenes", "AWS SDK")`} />
 
 ## Decisiones de arquitectura
 
-Diagrama y decisiones de arquitectura. Contenido próximo.
+### Restify sobre Express
+
+Restify fue una decisión consciente frente a Express, el framework dominante en ese momento. Mientras Express es un framework web de propósito general (sirve HTML, vistas, APIs), Restify está diseñado exclusivamente para construir APIs REST. Las ventajas fueron concretas:
+
+- **Menor overhead**: Restify no incluye renderizado de vistas, helpers de HTML, ni middleware que no necesitábamos.
+- **Manejo de errores HTTP nativo**: `restify-errors` proporcionaba clases específicas (`BadRequestError`, `NotFoundError`, `InternalServerError`) que hacían el código de errores más expresivo y consistente.
+- **Soporte para versionado**: Restify tiene mecanismos nativos para versionar rutas, algo que en Express requiere configuración manual.
+- **DTrace**: Restify está optimizado para DTrace, permitiendo depuración en producción sin modificar el código.
+
+La desventaja principal era la comunidad más pequeña — menos plugins, menos ejemplos, menos StackOverflow. Pero para APIs puras, el balance era positivo.
+
+### MongoDB con Mongoose ODM
+
+MongoDB nos dio velocidad de iteración. En un producto donde los esquemas de datos evolucionaban rápidamente, no tener que ejecutar migrations cada semana fue una ventaja competitiva. Pero la flexibilidad sin disciplina genera caos, y ahí entró Mongoose.
+
+Mongoose aportó tres cosas críticas:
+
+1. **Validación de esquemas**: definíamos schemas con tipos, requeridos, y validadores personalizados — el esquema era opcional en MongoDB pero obligatorio en nuestra aplicación.
+2. **Middlewares**: hooks `pre('save')` y `post('findOneAndUpdate')` para auditoría automática.
+3. **Populate**: el equivalente lazy de joins en MongoDB — referencias entre colecciones sin acoplamiento.
+
+### AWS S3 para almacenamiento de archivos
+
+Separar el almacenamiento de archivos del servidor de aplicaciones fue una decisión temprana que evitó dolores de cabeza. En lugar de guardar archivos en el disco del servidor (con problemas de escalabilidad, backups, y balanceadores de carga), todo el contenido subido por los usuarios — imágenes, documentos, reportes — se almacenaba en S3. Cada archivo se referenciaba por su clave S3 en MongoDB, y las URLs prefirmadas permitían acceso controlado sin exponer credenciales.
+
+### AWS SES para notificaciones transaccionales
+
+Para el envío de correos electrónicos — confirmaciones de registro, notificaciones de estado, resúmenes periódicos — elegimos SES en lugar de montar un servidor SMTP o usar un servicio externo costoso. SES nos daba alta capacidad de entrega con costos mínimos, y la integración vía AWS SDK era directa desde Node.js.
 
 ## Implementación clave
 
-Detalles de implementación y fragmentos de código. Contenido próximo.
+### Mongoose middleware para auditoría automática
+
+Uno de los patrones que más valor aportó fue un plugin global de Mongoose que registraba automáticamente metadatos de auditoría en cada documento:
+
+```typescript
+// Plugin de auditoría — se aplica a todos los schemas automáticamente
+function auditPlugin(schema: Schema) {
+  schema.add({
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+    modifiedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+    changeLog: [{ field: String, from: Schema.Types.Mixed, to: Schema.Types.Mixed, at: Date, by: String }],
+  });
+
+  schema.pre('findOneAndUpdate', function (next) {
+    this.set({ updatedAt: new Date() });
+    next();
+  });
+}
+
+// Aplicación global
+mongoose.plugin(auditPlugin);
+```
+
+Este plugin eliminó la repetición de código en cada controlador y garantizó que ningún documento quedara sin trazabilidad — cada cambio tenía autor, timestamp, y detalle de qué campo cambió.
+
+### Versionado de APIs con Restify
+
+Restify facilitó el versionado mediante el middleware `accept-version`. Cada ruta podía declarar una versión, y Restify resolvía automáticamente qué handler ejecutar basado en el header `Accept-Version` del cliente:
+
+```typescript
+server.get({ path: '/usuarios', version: '1.0.0' }, listarUsuariosV1);
+server.get({ path: '/usuarios', version: ['2.0.0', '2.x'] }, listarUsuariosV2);
+```
+
+Esto permitió mantener APIs legacy operando en producción mientras se iteraba sobre nuevas versiones, sin romper clientes existentes. La estrategia era simple: los clientes nuevos usaban la versión más reciente, los clientes legacy migraban en su propio cronograma.
 
 ## Resultados
 
-Métricas y resultados obtenidos. Contenido próximo.
+- **APIs REST estables** en producción con clientes activos, sirviendo datos de forma confiable.
+- **85%+ de cobertura de tests**, con integración continua en cada PR.
+- **Proceso de code review semanal**: cada PR requería al menos una aprobación antes de llegar a producción. Esto mejoró la calidad del código y, más importante, distribuyó el conocimiento del dominio entre los miembros del equipo.
+- **Integración eficiente con AWS**: S3 y SES cubrieron almacenamiento y notificaciones sin necesidad de un framework serverless completo — solo los servicios que realmente necesitábamos, sin over-engineering.
+- **API versionada** que permitió evolución sin ruptura de compatibilidad.
 
 ## Lecciones aprendidas
 
-Lecciones y aprendizajes del proyecto. Contenido próximo.
+MongoDB es excelente para prototipar rápido, pero la falta de un esquema rígido a nivel de base de datos puede llevar a inconsistencias si el equipo no es disciplinado con Mongoose validators. Aprendimos que los schemas de Mongoose deben tratarse con el mismo rigor que un schema de base de datos relacional — definir, validar, y hacer cumplir desde el día uno.
+
+Restify es una opción que recomiendo para proyectos de APIs puras. Es más ligero y enfocado que Express, pero la comunidad más pequeña significa menos recursos cuando encuentras un edge case. Para un equipo que sabe lo que hace, es una excelente herramienta.
+
+Las revisiones de código frecuentes — semanales o por PR — son la forma más efectiva de mantener estándares de calidad en equipos que crecen rápido. No solo atrapan bugs; documentan decisiones, comparten contexto, y construyen una cultura de propiedad colectiva del código. Cada revisión es una inversión en la salud futura del proyecto.
