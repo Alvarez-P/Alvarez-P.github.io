@@ -1,0 +1,50 @@
+---
+/**
+ * /projects/[slug] — Dynamic project detail route.
+ *
+ * Uses getStaticPaths() to generate pages for all published projects.
+ * Unknown slugs return 404 automatically (not in getStaticPaths).
+ *
+ * Each page renders:
+ *   - Header band (back link, eyebrow, title, role, tech tags)
+ *   - MDX body via ProjectLayout
+ *   - Prev/next navigation
+ */
+
+import { getCollection, render } from 'astro:content';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects
+    .filter((p) => p.data.published)
+    .map((entry) => ({
+      params: { slug: entry.id },
+      props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+// Compute prev/next by sorting all published projects
+const allProjects = await getCollection('projects');
+const sorted = allProjects
+  .filter((p) => p.data.published)
+  .sort((a, b) => {
+    if (a.data.order !== undefined && b.data.order !== undefined) {
+      return a.data.order - b.data.order;
+    }
+    if (a.data.order !== undefined) return -1;
+    if (b.data.order !== undefined) return 1;
+    return b.data.period.start.getTime() - a.data.period.start.getTime();
+  });
+
+const idx = sorted.findIndex((p) => p.id === entry.id);
+const prev = idx > 0 ? sorted[idx - 1] : null;
+const next = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+---}
+
+<ProjectLayout entry={entry} prev={prev} next={next}>
+  <Content />
+</ProjectLayout>

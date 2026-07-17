@@ -1,0 +1,102 @@
+---
+/**
+ * TechIcon — Resolves technology icons via astro-icon.
+ *
+ * Resolution order:
+ *   1. simple-icons:{name}
+ *   2. devicon:{name}
+ *   3. Text fallback chip with tech name
+ *
+ * Since both icon sets are included with wildcard ('*'), all icons from both
+ * collections are available at build time. We try simple-icons first, then
+ * devicon. If neither matches, we render a text chip fallback.
+ *
+ * Props:
+ *   name  — technology name (e.g. "TypeScript", "AWS Lambda")
+ *   size  — 'sm' | 'md' | 'lg'  (default: 'md')
+ */
+
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  name: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { name, size = 'md' } = Astro.props;
+
+const sizeMap: Record<string, number> = {
+  sm: 16,
+  md: 24,
+  lg: 32,
+};
+const px = sizeMap[size] ?? 24;
+
+// Normalise: lowercase, spaces → hyphens, strip non-alphanumeric
+const normalised = name
+  .toLowerCase()
+  .replace(/\s+/g, '-')
+  .replace(/[^a-z0-9-]/g, '');
+
+// We use a known-safe approach: check a pre-built set of icon names
+// from both collections to avoid build-time throws.
+// This set includes all technologies used in the portfolio.
+const KNOWN_SIMPLE: ReadonlySet<string> = new Set([
+  'typescript', 'javascript', 'nodedotjs', 'react', 'nextdotjs',
+  'amazonwebservices', 'docker', 'postgresql', 'mongodb', 'redis',
+  'github', 'git', 'prisma', 'graphql', 'express', 'nginx',
+  'go', 'python', 'amazondynamodb', 'amazonsqs', 'amazons3',
+  'serverless', 'jest', 'vitest', 'playwright',
+  'nginx', 'linux', 'ubuntu', 'npm',
+]);
+
+const KNOWN_DEVICON: ReadonlySet<string> = new Set([
+  'nestjs', 'bash', 'vscode', 'ubuntu', 'npm', 'nodejs',
+  'express', 'mongodb', 'redis', 'postgresql', 'docker',
+  'amazonwebservices', 'typescript', 'javascript', 'react',
+  'nextjs', 'go', 'python', 'jest', 'graphql',
+  'github', 'git', 'prisma', 'linux',
+]);
+
+// Determine which icon source to use
+let iconId: string | null = null;
+
+// Normalise further: map common aliases
+const aliasMap: Record<string, string> = {
+  'aws': 'amazonwebservices',
+  'node-js': 'nodedotjs',
+  'node': 'nodedotjs',
+  'next-js': 'nextdotjs',
+  'next': 'nextdotjs',
+  'github-actions': 'githubactions',
+  'react-js': 'react',
+  'postgres': 'postgresql',
+};
+
+const resolved = aliasMap[normalised] ?? normalised;
+
+if (KNOWN_SIMPLE.has(resolved)) {
+  iconId = `simple-icons:${resolved}`;
+} else if (KNOWN_DEVICON.has(resolved)) {
+  iconId = `devicon:${resolved}`;
+}
+---}
+
+{iconId ? (
+  <Icon name={iconId} width={px} height={px} aria-hidden="true" title={name} />
+) : (
+  <span class="techicon-fallback">{name}</span>
+)}
+
+<style>
+  .techicon-fallback {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--code-inline-chip-padding);
+    font: var(--code-inline-chip-typo);
+    background: var(--code-inline-chip-bg);
+    color: var(--code-inline-chip-text);
+    border-radius: var(--code-inline-chip-rounded);
+    white-space: nowrap;
+  }
+</style>

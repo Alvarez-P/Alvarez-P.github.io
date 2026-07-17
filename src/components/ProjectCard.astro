@@ -1,0 +1,197 @@
+---
+/**
+ * ProjectCard — Case study card for the /projects listing.
+ *
+ * Renders a card-feature container with:
+ *   - Company + period (eyebrow style)
+ *   - Title (display-sm, ink color — NOT green)
+ *   - Description (body-md, body color)
+ *   - Tech tags (button-pill-tag chips with TechIcon)
+ *   - Metrics (JetBrains Mono numbers, ink-strong)
+ *   - Hairline separator between description and metrics
+ *   - Entire card is clickable → /projects/[slug]
+ *
+ * Props: all fields from the project collection entry.
+ */
+
+import TechIcon from './TechIcon.astro';
+import type { CollectionEntry } from 'astro:content';
+
+type ProjectEntry = CollectionEntry<'projects'>;
+
+export interface Props {
+  entry: ProjectEntry;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+
+// Format period: human-readable date range
+function formatDate(d: Date): string {
+  return d.toLocaleDateString('es-MX', { year: 'numeric', month: 'short' });
+}
+
+const periodStr = data.period.end
+  ? `${formatDate(data.period.start)} – ${formatDate(data.period.end)}`
+  : `${formatDate(data.period.start)} – presente`;
+---}
+
+<a href={`/projects/${entry.id}`} class="project-card">
+  <article>
+    <!-- Eyebrow: Company · Period -->
+    <p class="card-eyebrow">{data.company}<span class="eyebrow-sep" aria-hidden="true"> · </span>{periodStr}</p>
+
+    <!-- Title: display-sm, ink, NOT green -->
+    <h2 class="card-title">{data.title}</h2>
+
+    <!-- Description -->
+    {data.description && <p class="card-description">{data.description}</p>}
+
+    <!-- Tech tags row -->
+    <div class="card-techs">
+      {data.techStack.map((tech) => (
+        <span class="tech-pill">
+          <TechIcon name={tech} size="sm" />
+          <span class="tech-pill-label">{tech}</span>
+        </span>
+      ))}
+    </div>
+
+    <!-- Hairline separator -->
+    <hr class="card-separator" aria-hidden="true" />
+
+    <!-- Metrics -->
+    <div class="card-metrics">
+      {data.metrics.slice(0, 3).map((m) => (
+        <div class="metric-item">
+          <span class="metric-value">{m.value}</span>
+          <span class="metric-label">{m.label}</span>
+        </div>
+      ))}
+    </div>
+  </article>
+</a>
+
+<style>
+  /* ========================================================================
+     Project Card — card-feature tokens
+     ======================================================================== */
+  .project-card {
+    display: block;
+    background: var(--card-feature-bg);
+    border: 1px solid var(--card-feature-border);
+    border-radius: var(--card-feature-rounded);
+    padding: var(--card-feature-padding);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color var(--transition-fast);
+  }
+
+  .project-card:hover {
+    border-color: var(--color-primary);
+  }
+
+  /* ========================================================================
+     Eyebrow: Company · Period — Inter 600 14px, uppercase, tracked, mute
+     ======================================================================== */
+  .card-eyebrow {
+    font: var(--text-eyebrow);
+    letter-spacing: var(--text-eyebrow-tracking);
+    text-transform: uppercase;
+    color: var(--color-mute);
+    margin-bottom: var(--space-sm);
+    margin-block-end: var(--space-sm);
+  }
+
+  .eyebrow-sep {
+    color: var(--color-hairline);
+    margin: 0 var(--space-xxs);
+  }
+
+  /* ========================================================================
+     Title — display-sm, ink, NOT green
+     ======================================================================== */
+  .card-title {
+    font: var(--text-display-sm);
+    letter-spacing: var(--text-display-sm-tracking);
+    color: var(--color-ink);
+    margin-bottom: var(--space-md);
+    margin-block-end: var(--space-md);
+  }
+
+  /* ========================================================================
+     Description — body-md, body color
+     ======================================================================== */
+  .card-description {
+    font: var(--text-body-md);
+    color: var(--color-body);
+    margin-bottom: var(--space-lg);
+    margin-block-end: var(--space-lg);
+  }
+
+  /* ========================================================================
+     Tech tags — horizontal flex of button-pill-tag chips
+     ======================================================================== */
+  .card-techs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    margin-block-end: var(--space-lg);
+  }
+
+  .tech-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--button-pill-tag-padding);
+    font: var(--button-pill-tag-typo);
+    color: var(--button-pill-tag-text);
+    background: var(--button-pill-tag-bg);
+    border: 1px solid var(--button-pill-tag-border);
+    border-radius: var(--button-pill-tag-rounded);
+  }
+
+  .tech-pill-label {
+    font: var(--text-body-sm);
+    color: var(--color-ink);
+  }
+
+  /* ========================================================================
+     Separator — hairline
+     ======================================================================== */
+  .card-separator {
+    border: none;
+    border-top: 1px solid var(--color-hairline);
+    margin: 0 0 var(--space-lg) 0;
+    margin-block: 0 0 var(--space-lg) 0;
+  }
+
+  /* ========================================================================
+     Metrics — JetBrains Mono numbers, ink-strong
+     ======================================================================== */
+  .card-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xl);
+  }
+
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xxs);
+  }
+
+  .metric-value {
+    font: var(--text-code-strong);
+    font-size: 18px;
+    color: var(--color-ink-strong);
+  }
+
+  .metric-label {
+    font: var(--text-caption);
+    color: var(--color-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>

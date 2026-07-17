@@ -19,6 +19,7 @@ const projects = defineCollection({
       end: z.coerce.date().optional(),
     }),
     role: z.string(),
+    description: z.string().optional(),
     techStack: z.array(z.string()).nonempty(),
     tags: z.array(z.string()).nonempty(),
     metrics: z

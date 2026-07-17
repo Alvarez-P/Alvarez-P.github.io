@@ -1,0 +1,51 @@
+---
+/**
+ * MermaidDiagram — Renders Mermaid diagrams in a card-feature container.
+ *
+ * astro-mermaid integration processes <pre class="mermaid"> at runtime,
+ * converting the diagram code to SVG client-side.
+ *
+ * The container uses card-feature tokens (hairline border, rounded md, padding 2xl).
+ *
+ * Props:
+ *   code  — Mermaid diagram source (e.g. "graph TD\n  A-->B")
+ */
+
+export interface Props {
+  code: string;
+}
+
+const { code } = Astro.props;
+---}
+
+<figure class="mermaid-container">
+  <pre class="mermaid">
+    {code}
+  </pre>
+</figure>
+
+<style>
+  .mermaid-container {
+    background: var(--card-feature-bg);
+    border: 1px solid var(--card-feature-border);
+    border-radius: var(--card-feature-rounded);
+    padding: var(--card-feature-padding);
+    overflow-x: auto;
+    max-width: 100%;
+    margin-block: var(--space-2xl);
+  }
+
+  .mermaid-container :global(pre) {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    font: inherit;
+  }
+
+  /* Ensure Mermaid SVG stays within bounds */
+  .mermaid-container :global(svg) {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
