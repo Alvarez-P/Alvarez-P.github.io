@@ -285,4 +285,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       min-width: auto;
     }
   }
+
+  /* ========================================================================
+     Desktop — ≥1024px: explicit 3-column stack grid, larger layout
+     ======================================================================== */
+  @media (min-width: 1024px) {
+    .stack-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .about-page {
+      max-width: 960px;
+    }
+
+    .about-title {
+      font-size: var(--font-size-xl);
+    }
+  }
 </style>

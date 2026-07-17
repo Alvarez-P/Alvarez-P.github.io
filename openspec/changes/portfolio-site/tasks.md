@@ -34,7 +34,7 @@ Chain strategy: stacked-to-main
 - [x] 1.4 Create `src/styles/global.css` — reset, body defaults, `::selection`
 - [x] 1.5 Create `src/content.config.ts` — Zod schema for projects collection
 - [x] 1.6 Replace `public/favicon.svg` with terminal `>_` icon
-- [ ] 1.7 Create `src/icons/` directory for SVG overrides
+- [x] 1.7 Create `src/icons/` directory for SVG overrides
 
 ## Phase 2: Shell + Static Pages
 

@@ -20,6 +20,10 @@ const links: NavLink[] = [
       <span class="nav-brand-text">gentleman<span class="nav-brand-accent">.</span>dev</span>
     </a>
 
+    <button class="hamburger" aria-label="Menú" aria-expanded="false">
+      <span class="hamburger-line"></span>
+    </button>
+
     <ul class="nav-links">
       {links.map((link) => {
         const isActive =
@@ -60,6 +64,7 @@ const links: NavLink[] = [
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
   }
 
   .nav-brand {
@@ -118,6 +123,89 @@ const links: NavLink[] = [
     flex-shrink: 0;
   }
 
+  /* ========================================================================
+     Hamburger — CSS-only icon (3 stacked lines), hidden on desktop
+     ======================================================================== */
+  .hamburger {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--rounded-xs);
+      cursor: pointer;
+      padding: 6px;
+      position: relative;
+      z-index: calc(var(--z-overlay) + 1);
+    }
+
+    .hamburger-line,
+    .hamburger-line::before,
+    .hamburger-line::after {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--color-ink);
+      border-radius: 1px;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .hamburger-line {
+      position: relative;
+    }
+
+    .hamburger-line::before,
+    .hamburger-line::after {
+      content: '';
+      position: absolute;
+      left: 0;
+    }
+
+    .hamburger-line::before { top: -6px; }
+    .hamburger-line::after { top: 6px; }
+
+    /* Open state → X animation */
+    [aria-expanded="true"] .hamburger-line {
+      background: transparent;
+    }
+
+    [aria-expanded="true"] .hamburger-line::before {
+      top: 0;
+      transform: rotate(45deg);
+    }
+
+    [aria-expanded="true"] .hamburger-line::after {
+      top: 0;
+      transform: rotate(-45deg);
+    }
+
+    /* Mobile nav: hidden by default, shown when open */
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: var(--space-xs);
+      background: var(--color-canvas);
+      border-bottom: 1px solid var(--color-hairline);
+      padding: var(--space-md);
+    }
+
+    .nav-links.open {
+      display: flex;
+    }
+  }
+
   @media (max-width: 480px) {
     .nav-inner {
       padding: var(--space-sm) var(--space-lg);
@@ -132,3 +220,26 @@ const links: NavLink[] = [
     }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (hamburger && navLinks) {
+      hamburger.addEventListener('click', () => {
+        const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+        hamburger.setAttribute('aria-expanded', String(!expanded));
+        navLinks.classList.toggle('open');
+      });
+
+      // Close menu on link click (mobile)
+      navLinks.querySelectorAll('.nav-link').forEach((link) => {
+        link.addEventListener('click', () => {
+          hamburger.setAttribute('aria-expanded', 'false');
+          navLinks.classList.remove('open');
+        });
+      });
+    }
+  });
+</script>

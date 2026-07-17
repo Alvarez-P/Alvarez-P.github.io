@@ -58,6 +58,8 @@ Fonts SHALL be imported in the base layout. The CSS SHALL define `--font-mono` a
 - WHEN a `<h1>` element renders
 - THEN the heading uses JetBrains Mono with monospace fallback
 
+> **Note**: This applies to terminal-themed pages (about, contact) where monospace headings are used intentionally for a command-line aesthetic. General headings (`h1`–`h6` in `global.css`) use Inter per DESIGN.md. Terminal-themed pages MAY use monospace headings for aesthetic consistency with the terminal brand.
+
 #### Scenario: Sans font renders on body text
 
 - GIVEN the base layout imports Inter via `@fontsource`

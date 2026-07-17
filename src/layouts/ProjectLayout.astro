@@ -359,4 +359,33 @@ const periodStr = data.period.end
       text-align: left;
     }
   }
+
+  /* ========================================================================
+     Desktop — ≥1024px: wider content area, larger display
+     ======================================================================== */
+  @media (min-width: 1024px) {
+    .project-detail {
+      max-width: 1100px;
+      padding: var(--space-5xl) var(--space-3xl) var(--space-6xl);
+    }
+
+    .detail-title {
+      font-size: 42px;
+      line-height: 48px;
+      max-width: 18ch;
+    }
+
+    .detail-desc {
+      font-size: 20px;
+      line-height: 32px;
+    }
+
+    .detail-body :global(p) {
+      max-width: 70ch;
+    }
+
+    .detail-body :global(pre) {
+      max-width: 100%;
+    }
+  }
 </style>

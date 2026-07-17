@@ -67,7 +67,7 @@
     font: var(--text-eyebrow);
     letter-spacing: var(--text-eyebrow-tracking);
     text-transform: uppercase;
-    color: var(--color-primary);
+    color: var(--color-mute);
     margin-bottom: var(--space-lg);
     margin-block-end: var(--space-lg);
   }
@@ -323,6 +323,30 @@
     .code-copy-btn {
       width: 24px;
       height: 24px;
+    }
+  }
+
+  /* ========================================================================
+     Desktop — ≥1024px: larger display, more breathing room
+     ======================================================================== */
+  @media (min-width: 1024px) {
+    .hero-band {
+      padding: var(--space-6xl) var(--space-3xl);
+    }
+
+    .hero-headline {
+      font-size: 72px;
+      line-height: 72px;
+    }
+
+    .hero-subtitle {
+      font-size: 20px;
+      line-height: 32px;
+      max-width: 50ch;
+    }
+
+    .code-mockup {
+      max-width: 780px;
     }
   }
 </style>
