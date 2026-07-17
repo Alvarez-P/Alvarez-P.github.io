@@ -1,58 +1,176 @@
 ---
-title: "Marketplace de Servicios Freelance"
+title: "APIs REST y Funciones Serverless"
 company: "Belieff"
 period:
-  start: 2020-09-01
-  end: 2021-05-01
-role: "Full-Stack Developer"
-description: "Marketplace que conecta freelancers con clientes — sistema de pagos, reputación, y geolocalización con NestJS y PostgreSQL."
+  start: 2020-03-01
+  end: 2021-10-01
+role: "Backend Developer"
+description: "Desarrollé APIs REST con Node.js y Express e implementé funciones serverless en AWS Lambda para productos digitales, trabajando en equipos Scrum durante todo el ciclo de desarrollo."
 techStack:
   - Node.js
-  - TypeScript
-  - NestJS
-  - PostgreSQL
-  - GraphQL
-  - AWS
-  - Docker
-  - React
+  - Express
+  - MySQL
+  - Sequelize
+  - AWS Lambda
+  - DynamoDB
+  - AWS S3
+  - AWS RDS
 tags:
-  - fullstack
-  - marketplace
-  - payments
-  - nestjs
+  - backend
+  - rest-api
+  - serverless
+  - aws
+  - nodejs
+  - mysql
+  - scrum
 metrics:
-  - label: "Usuarios registrados"
-    value: "10K+"
+  - label: "APIs desarrolladas"
+    value: "5+"
     direction: "up"
-  - label: "Transacciones"
-    value: "$2M+"
+  - label: "Funciones Lambda"
+    value: "10+"
     direction: "up"
-  - label: "Tasa de match"
-    value: "85%"
+  - label: "Sprints completados"
+    value: "30+"
     direction: "up"
 featured: false
 order: 4
 published: true
 ---
 
-Contenido en desarrollo.
+import MermaidDiagram from '../../components/MermaidDiagram.astro';
 
 ## Contexto y problema
 
-Descripción del contexto y problema a resolver. Contenido próximo.
+Belieff era una casa de productos digitales que operaba múltiples aplicaciones simultáneamente: plataformas de marketplace, sistemas de gestión de contenido, herramientas de colaboración, y soluciones de procesamiento de datos. Cada producto tenía necesidades de backend distintas — algunos requerían APIs REST tradicionales para operaciones CRUD con bases de datos relacionales, mientras que otros necesitaban procesamiento asíncrono para subida de archivos, generación de reportes, transformación de imágenes, y notificaciones programadas.
+
+El desafío era doble: construir un backend que pudiera servir ambos patrones — síncrono y asíncrono — sin sobreingeniería para ninguno de los dos. Un enfoque puramente basado en APIs REST habría sido ineficiente para las tareas asíncronas (respuestas lentas, timeouts, bloqueo de conexiones). Un enfoque puramente serverless habría complicado innecesariamente los CRUD simples. La solución tenía que convivir en el mismo ecosistema tecnológico.
+
+Además, el equipo era pequeño y trabajaba en ciclos Scrum de dos semanas. Necesitábamos ceremonias lean, despliegues frecuentes, y la capacidad de pivotar rápido cuando los requisitos cambiaban — algo común en una empresa que lanzaba productos nuevos constantemente.
+
+<MermaidDiagram code={`C4Context
+    title Backend + Serverless — Belieff
+
+    Person(cliente, "Cliente", "Usa la aplicación")
+    Person(admin, "Admin", "Gestiona contenido")
+
+    System_Boundary(belieff, "Belieff Platform") {
+        Container(api, "API REST", "Node.js + Express", "Endpoints para clientes")
+        Container(admin_api, "Admin API", "Node.js + Express", "Endpoints de administración")
+        ContainerDb(mysql, "MySQL", "Base de datos principal", "Datos relacionales")
+    }
+
+    System_Boundary(aws, "AWS Cloud") {
+        Container(lambda1, "Lambda — Procesamiento", "Node.js", "Tareas asíncronas")
+        Container(lambda2, "Lambda — Notificaciones", "Node.js", "Emails y push")
+        ContainerDb(ddb, "DynamoDB", "NoSQL", "Estado de tareas")
+        Container(s3, "S3", "Almacenamiento", "Archivos y assets")
+        Container(rds, "RDS", "MySQL", "Réplica de lectura")
+    }
+
+    Rel(cliente, api, "HTTPS", "JSON")
+    Rel(admin, admin_api, "HTTPS", "JSON")
+    Rel(api, mysql, "Lee/Escribe", "Sequelize ORM")
+    Rel(admin_api, mysql, "Lee/Escribe", "Sequelize")
+    Rel(api, lambda1, "Invoca", "AWS SDK")
+    Rel(lambda1, ddb, "Estado", "DynamoDB")
+    Rel(lambda1, s3, "Procesa archivos", "S3 SDK")
+    Rel(lambda2, rds, "Consulta", "SQL")
+    Rel(lambda2, s3, "Adjuntos", "S3 SDK")`} />
 
 ## Decisiones de arquitectura
 
-Diagrama y decisiones de arquitectura. Contenido próximo.
+### Express para APIs REST
+
+Elegir Express fue una decisión pragmática. En 2020, Express era — y sigue siendo — el estándar *de facto* en Node.js para construir APIs REST. Su ecosistema de middlewares es el más maduro del ecosistema: `helmet` para seguridad, `cors` para control de acceso, `compression` para respuestas optimizadas, `express-validator` para validación de entrada. La curva de aprendizaje es prácticamente plana, lo que permitía incorporar nuevos desarrolladores al equipo sin fricción.
+
+Para productos digitales donde la velocidad de salida al mercado importa, Express ofrece el mejor balance entre productividad y control. No impone una arquitectura — tú decides cómo organizar el código — y eso fue clave en un entorno donde cada producto podía tener una estructura ligeramente diferente.
+
+### Sequelize ORM sobre MySQL
+
+Sequelize nos dio lo que más necesitábamos: un mapeo objeto-relacional con soporte de primera clase para migraciones, seeders, y asociaciones. El modelado de relaciones (hasMany, belongsTo, many-to-many through) se expresaba de forma declarativa, y las migraciones versionaban el esquema de la base de datos junto con el código.
+
+El flujo típico era: el desarrollador creaba un modelo con sus asociaciones, ejecutaba una migración, y la base de datos reflejaba automáticamente los cambios. Las *seeds* poblaban datos de prueba para desarrollo. En la mayoría de los casos no necesitábamos SQL raw — Sequelize traducía las queries a SQL optimizado.
+
+### Lambda para tareas asíncronas
+
+La división entre lo síncrono (API REST) y lo asíncrono (procesamiento) fue probablemente la decisión arquitectónica más importante. La API de Express respondía rápido — típicamente < 200 ms — delegando las tareas pesadas a Lambda mediante invocaciones asíncronas. El cliente recibía una respuesta inmediata con un `taskId` y podía consultar el estado después.
+
+Esto nos dio:
+
+- **APIs responsivas**: la API nunca se bloqueaba esperando que una tarea pesada terminara.
+- **Escalado independiente**: las Lambdas escalaban según la carga de procesamiento, la API según la carga de peticiones HTTP.
+- **Aislamiento de fallos**: una Lambda que fallaba no afectaba a la API ni a otras Lambdas.
+
+### DynamoDB para estado de tareas
+
+Las Lambdas necesitaban persistir el estado de procesamiento de cada tarea — "pendiente", "en progreso", "completado", "fallido" — para que los clientes pudieran consultarlo. DynamoDB fue la elección natural para este patrón de *append-only* con TTL.
+
+A diferencia de MySQL (donde cada registro de estado sería una fila más en una tabla que crece sin límite), DynamoDB nos permitía:
+
+- **TTL automático**: los registros de estado expiraban después de 7 días sin intervención manual.
+- **Escrituras de bajo costo**: una tabla de DynamoDB con capacidad bajo demanda cobra por escritura, ideal para el patrón de muchas escrituras, pocas lecturas.
+- **Modelo de datos simple**: PK = `taskId`, SK = `timestamp`, atributo `status`. Sin joins, sin esquemas rígidos.
 
 ## Implementación clave
 
-Detalles de implementación y fragmentos de código. Contenido próximo.
+### Sequelize migrations en CI/CD
+
+Las migraciones de base de datos se ejecutaban como paso previo al deploy en el pipeline de CI/CD. El flujo era:
+
+1. El desarrollador creaba una migración con `npx sequelize-cli migration:generate`
+2. En el PR, la migración se revisaba junto con el código
+3. Al mergear a `main`, el pipeline ejecutaba `npx sequelize-cli db:migrate`
+4. Si la migración fallaba (error SQL, conflicto de esquema), el deploy se detenía automáticamente
+
+Esto evitó el problema clásico de inconsistencias entre el código (que espera ciertas columnas) y la base de datos (que aún no las tiene). El esquema y el código siempre estaban sincronizados porque la migración era parte del mismo pipeline.
+
+### Patrón API → Lambda vía AWS SDK
+
+El patrón de invocación asíncrona fue clave para el rendimiento del sistema:
+
+```typescript
+import { Lambda } from '@aws-sdk/client-lambda';
+
+const lambda = new Lambda({ region: 'us-east-1' });
+
+async function iniciarProcesamiento(archivoId: string): Promise<string> {
+  const taskId = crypto.randomUUID();
+
+  await lambda.invoke({
+    FunctionName: 'procesar-archivo',
+    InvocationType: 'Event', // Asíncrona — no espera respuesta
+    Payload: JSON.stringify({ taskId, archivoId }),
+  });
+
+  return taskId;
+}
+```
+
+El `InvocationType: 'Event'` hace que Lambda devuelva inmediatamente un código 202 sin esperar a que la función termine. El cliente recibe el `taskId` y puede consultar el estado en DynamoDB mediante otro endpoint de la API. Este patrón — *async request-reply* — es simple pero extremadamente efectivo.
+
+### Estructura de proyectos en Scrum
+
+Cada producto vivía en su propio repositorio, pero todos compartían una librería común de utilidades publicada como paquete interno:
+
+- **Modelos de Sequelize compartidos**: definiciones de modelos reutilizables (`User`, `Product`, `Order`) que cada repositorio importaba.
+- **Helpers de AWS SDK**: funciones wrapper para invocar Lambdas, subir archivos a S3, y enviar notificaciones.
+- **Utilidades de validación**: schemas de `express-validator` comunes (emails, UUIDs, fechas).
+
+Esta estructura permitió que múltiples equipos Scrum trabajaran en paralelo — cada uno en su producto — mientras mantenían consistencia en las capas de infraestructura. Un cambio en la librería compartida se versionaba con semver y cada producto actualizaba cuando lo necesitaba.
 
 ## Resultados
 
-Métricas y resultados obtenidos. Contenido próximo.
+- **5+ APIs REST** en producción sirviendo a múltiples productos digitales simultáneamente, cada una con su propio modelo de datos y conjunto de endpoints.
+- **10+ funciones Lambda** desplegadas y operativas, manejando procesamiento de archivos, transformación de imágenes, notificaciones push, y generación de reportes.
+- **Escalado automático**: las Lambdas manejaban picos de carga sin intervención manual — desde decenas de invocaciones por hora hasta miles por minuto.
+- **30+ sprints completados** con entregas continuas de valor al negocio, demostrando la efectividad del modelo Scrum en entornos de productos digitales.
+- **Cero inconsistencias código-base de datos** gracias a las migraciones automatizadas en el pipeline de CI/CD.
 
 ## Lecciones aprendidas
 
-Lecciones y aprendizajes del proyecto. Contenido próximo.
+Sequelize es extremadamente productivo al inicio del proyecto — te permite modelar relaciones, ejecutar migraciones, y poblar datos de prueba en minutos. Pero a medida que la base de datos crece, las queries generadas automáticamente pueden volverse difíciles de optimizar. Los JOINs anidados con múltiples condiciones, las agregaciones complejas, y las subconsultas a veces generaban SQL ineficiente. La lección: `sequelize.query()` con SQL raw no es una señal de fracaso — es la herramienta correcta para queries donde el rendimiento importa. Usar Sequelize para el 80% de los casos y SQL raw para el 20% crítico es el balance óptimo.
+
+Invocar Lambdas desde una API de Express funciona bien, pero el *cold start* de Lambda añade latencia a la primera invocación después de un período de inactividad. Para tareas donde ese delay inicial es aceptable (procesamiento de archivos, generación de reportes), el patrón es perfecto. Pero para tareas verdaderamente críticas en tiempo real — donde 500 ms adicionales son inaceptables — mantener la lógica en la API con un worker queue (Bull + Redis) es más predecible.
+
+DynamoDB para tracking de tareas fue uno de los aciertos más claros del proyecto. Los TTL automáticos eliminaron la necesidad de jobs de limpieza programados — DynamoDB borraba registros expirados sin costo adicional. El modelo *key-value* para este tipo de datos resultó mucho más natural que una tabla relacional con índices y migraciones.

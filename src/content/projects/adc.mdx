@@ -1,56 +1,250 @@
 ---
-title: "Sistema de Alertas y Monitoreo"
+title: "Consultoría y Desarrollo Full Stack"
 company: "ADC"
 period:
-  start: 2019-03-01
-  end: 2020-08-01
-role: "Backend Developer"
-description: "Plataforma de monitoreo distribuido con Node.js y Express — alertas en tiempo real, dashboards, y pipelines de datos."
+  start: 2018-03-01
+role: "Full Stack Developer & Tech Lead"
+description: "Consultoría tecnológica para diversos clientes: diseñé e implementé aplicaciones Full Stack con Node.js, React y TypeScript, apliqué arquitecturas limpias con NestJS, contenericé con Docker y establecí pipelines CI/CD con testing automatizado."
 techStack:
   - Node.js
-  - JavaScript
-  - Express
+  - TypeScript
+  - NestJS
+  - React
+  - PostgreSQL
+  - MySQL
   - MongoDB
-  - Redis
   - Docker
+  - AWS
+  - Jest
 tags:
-  - backend
-  - monitoring
-  - realtime
-  - nodejs
+  - fullstack
+  - clean-architecture
+  - docker
+  - ci-cd
+  - typescript
+  - nestjs
+  - react
+  - mentoring
+  - testing
 metrics:
-  - label: "Métricas/segundo"
-    value: "100K+"
+  - label: "Años de experiencia"
+    value: "7+"
     direction: "up"
-  - label: "Alertas/día"
-    value: "500+"
+  - label: "Clientes atendidos"
+    value: "10+"
     direction: "up"
-  - label: "Uptime plataforma"
-    value: "99.95%"
+  - label: "Devs mentorizados"
+    value: "5+"
+    direction: "up"
+  - label: "Cobertura de tests"
+    value: "90%+"
     direction: "up"
 featured: false
 order: 5
 published: true
 ---
 
-Contenido en desarrollo.
+import MermaidDiagram from '../../components/MermaidDiagram.astro';
 
 ## Contexto y problema
 
-Descripción del contexto y problema a resolver. Contenido próximo.
+ADC nació como una consultoría tecnológica independiente con una tesis clara: ayudar a empresas a construir software de calidad usando las mejores prácticas del ecosistema Node.js/TypeScript, sin importar si el proyecto era una startup en fase inicial o un sistema legacy en una empresa establecida.
+
+El desafío fundamental de la consultoría es la **diversidad**. Cada cliente llega con un contexto distinto: una startup necesita un MVP en 4 semanas, una empresa mediana quiere migrar de un monolito a microservicios, un equipo interno necesita mentoring para adoptar TypeScript. No hay dos proyectos iguales, y la solución técnica debe adaptarse al problema real, no al stack de moda.
+
+La pregunta recurrente era siempre la misma: ¿cómo mantener estándares altos de calidad técnica cuando cada proyecto tiene requisitos, plazos y equipos diferentes?
+
+La respuesta fue construir un **toolkit de prácticas transferibles** — Docker para consistencia de entornos, Jest para testing sistemático, CI/CD como requisito no negociable, y decisiones de arquitectura basadas en el contexto de cada cliente en lugar de dogmas tecnológicos.
+
+<MermaidDiagram code={`C4Context
+    title Full Stack Consultoría — ADC
+
+    Person(cliente, "Cliente", "Solicita desarrollo de software")
+
+    System_Boundary(adc, "ADC Consulting") {
+        Container(frontend, "Frontend", "React + TypeScript", "SPA para clientes")
+        Container(api, "API Backend", "NestJS / Express", "REST + GraphQL")
+        ContainerDb(pg, "PostgreSQL", "Base de datos relacional", "Datos transaccionales")
+        ContainerDb(mongo, "MongoDB", "Base de datos NoSQL", "Datos no estructurados")
+        ContainerDb(mysql, "MySQL", "Base de datos legado", "Sistemas existentes")
+        Container(worker, "Workers", "Node.js", "Procesamiento en background")
+    }
+
+    System_Boundary(infra, "Infraestructura") {
+        Container(docker, "Docker", "Contenedores", "Ambientes aislados")
+        Container(ci, "CI/CD", "GitHub Actions", "Tests + Deploy automático")
+        Container(aws, "AWS", "Cloud", "Hosting y servicios")
+    }
+
+    Rel(cliente, frontend, "Usa", "HTTPS")
+    Rel(frontend, api, "Consume API", "REST/GraphQL")
+    Rel(api, pg, "Lee/Escribe", "SQL")
+    Rel(api, mongo, "Lee/Escribe", "Mongoose")
+    Rel(api, mysql, "Migra/Sincroniza", "SQL")
+    Rel(api, worker, "Encola", "Bull/Redis")
+    Rel(worker, pg, "Procesa", "SQL")
+    Rel(docker, api, "Contiene", "")
+    Rel(docker, frontend, "Contiene", "")
+    Rel(docker, worker, "Contiene", "")
+    Rel(ci, docker, "Build + Test", "")
+    Rel(ci, aws, "Deploy", "")`} />
 
 ## Decisiones de arquitectura
 
-Diagrama y decisiones de arquitectura. Contenido próximo.
+### NestJS para proyectos enterprise, Express para MVPs
+
+No hay un framework único para todos los casos. La distinción fue pragmática:
+
+- **NestJS** para proyectos enterprise de largo plazo con equipos de 3+ desarrolladores. Su estructura opinada (módulos, decoradores, inyección de dependencias) impone una organización consistente que escala con el equipo. La integración nativa con TypeORM, GraphQL, WebSocket, y colas lo convierte en una plataforma completa para aplicaciones complejas.
+- **Express** (y más tarde Fastify) para MVPs, prototipos, y proyectos donde la velocidad de entrega primaba sobre la arquitectura a largo plazo. Sin decoradores, sin DI, sin capas forzadas — solo rutas, middlewares, y lógica de negocio.
+
+La clave fue saber cuándo usar cada uno. Para un dashboard interno que se construiría en 3 semanas, Express. Para un sistema de gestión de inventarios con 2 años de vida proyectada, NestJS.
+
+### PostgreSQL como default, MongoDB y MySQL cuando el contexto lo pedía
+
+PostgreSQL fue la base de datos predeterminada para nuevos proyectos por tres razones:
+
+1. **Tipado fuerte**: los tipos nativos (JSONB, arrays, rangos, enum) cubren la mayoría de los casos de uso sin necesidad de un motor NoSQL separado.
+2. **JSONB para flexibilidad**: permite almacenar datos semi-estructurados dentro de filas relacionales, combinando lo mejor de ambos mundos.
+3. **Ecosistema maduro**: Prisma, TypeORM, Knex — todas las herramientas del ecosistema Node.js tienen soporte de primera clase para PostgreSQL.
+
+MongoDB se usó cuando los datos eran inherentemente no estructurados — catálogos de productos con atributos variables, logs de eventos, contenido generado por usuarios. MySQL apareció en proyectos legacy donde el cliente ya tenía una infraestructura existente y migrar no era viable.
+
+### Docker desde el día uno
+
+Docker no fue una decisión tardía ni una optimización — fue parte del *setup inicial* de cada proyecto. Cada nuevo cliente recibía un repositorio con `docker-compose.yml` desde el primer commit.
+
+El archivo típico incluía:
+
+```yaml
+version: '3.8'
+services:
+  app:
+    build: .
+    ports: ['3000:3000']
+    volumes: [.:/app, /app/node_modules]
+    depends_on: [db, redis]
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+  redis:
+    image: redis:7-alpine
+```
+
+El impacto fue inmediato: nuevos desarrolladores ejecutaban `docker compose up` y tenían el stack completo funcionando en minutos. Los problemas de "funciona en mi máquina" desaparecieron porque la máquina era siempre la misma — el contenedor.
+
+### Jest como estándar de testing
+
+Cada proyecto, sin excepción, incluía Jest como framework de testing desde el día uno. La decisión no era negociable porque la consultoría tiene una particularidad: **el código se entrega al cliente**. Sin tests, entregas código sin garantías.
+
+La cobertura objetivo era:
+
+- **90%+ en lógica de negocio**: casos de uso, reglas de dominio, validaciones.
+- **70%+ general**: incluyendo controladores, rutas, y configuración.
+
+Los tests no eran opcionales ni póstumos — se escribían junto con el código, en el mismo PR, y el pipeline los ejecutaba antes de permitir el merge.
+
+### CI/CD con GitHub Actions
+
+GitHub Actions fue la plataforma de CI/CD predeterminada por su integración nativa con el ecosistema GitHub y su modelo gratuito para repositorios públicos. El pipeline estándar ejecutaba:
+
+1. **Lint**: ESLint con reglas estrictas de TypeScript.
+2. **Test**: Jest con recolección de cobertura.
+3. **Build**: compilación de TypeScript y empaquetado.
+4. **Deploy**: a AWS (ECS, Lambda, o EC2 según el proyecto).
+
+El pipeline bloqueaba el merge si cualquiera de estos pasos fallaba, garantizando que `main` siempre estuviera en estado desplegable.
 
 ## Implementación clave
 
-Detalles de implementación y fragmentos de código. Contenido próximo.
+### Docker Compose para desarrollo local
+
+Uno de los patrones que más valor aportó a los clientes fue la estandarización del entorno de desarrollo con Docker Compose. Cada proyecto nuevo arrancaba con un `docker-compose.yml` que definía:
+
+- **La aplicación** con hot-reload habilitado (nodemon o ts-node-dev)
+- **La base de datos** (PostgreSQL, MySQL, o MongoDB según el caso)
+- **Redis** para colas con Bull
+- **Servicios mock** para integraciones externas (APIs de terceros, proveedores de email)
+
+Un solo comando — `docker compose up` — levantaba el stack completo. Los nuevos desarrolladores (especialmente juniors) pasaban de "no sé cómo configurar el entorno" a "tengo todo funcionando" en minutos. La inversión inicial de configurar Docker se pagaba en semanas cuando el equipo crecía.
+
+### Testing automatizado como requisito de merge
+
+El pipeline de CI/CD no solo ejecutaba tests — los **exigía**. Si un PR no alcanzaba el umbral de cobertura configurado, el pipeline fallaba y bloqueaba el merge. Esto transformó los tests de "algo que deberíamos hacer" a "algo que tenemos que hacer".
+
+```typescript
+// Ejemplo de test de API con Supertest
+describe('POST /api/usuarios', () => {
+  it('crea un usuario y devuelve 201', async () => {
+    const res = await request(app)
+      .post('/api/usuarios')
+      .send({ nombre: 'Juan', email: 'juan@example.com' });
+
+    expect(res.status).toBe(201);
+    expect(res.body).toHaveProperty('id');
+    expect(res.body.email).toBe('juan@example.com');
+  });
+
+  it('rechaza email inválido con 400', async () => {
+    const res = await request(app)
+      .post('/api/usuarios')
+      .send({ nombre: 'Juan', email: 'no-es-email' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toContain('email');
+  });
+});
+```
+
+La combinación de Jest + Supertest para APIs y React Testing Library para frontend cubría ambos lados del stack. Los tests de integración validaban que la API funcionara correctamente con la base de datos real (en un contenedor de test), y los tests unitarios validaban la lógica de negocio en aislamiento.
+
+### Clean Architecture en NestJS
+
+En los proyectos enterprise con NestJS, la estructura seguía estrictamente Clean Architecture:
+
+```
+src/
+├── domain/           # Entidades, Value Objects, puertos
+│   ├── entities/
+│   ├── value-objects/
+│   └── repositories/  # Interfaces (puertos de salida)
+├── application/      # Casos de uso
+│   └── use-cases/
+├── infrastructure/   # Implementaciones concretas
+│   ├── persistence/   # TypeORM entities, repositorios concretos
+│   ├── messaging/     # RabbitMQ, SQS, etc.
+│   └── services/      # Servicios externos
+└── presentation/     # Controladores REST, GraphQL resolvers
+    └── controllers/
+```
+
+La regla de dependencia se respetaba estrictamente: `domain` no conocía NestJS, TypeORM, ni Express. Las entidades de dominio eran clases puras de TypeScript. Los casos de uso dependían de interfaces (puertos), no de implementaciones concretas. Esto permitió probar la lógica de negocio sin levantar NestJS ni conectar una base de datos real.
+
+### Mentoría técnica estructurada
+
+Uno de los componentes más gratificantes de ADC fue la mentoría. El enfoque no era "explicar cómo hacer X", sino **enseñar a pensar en tradeoffs**. Las herramientas fueron:
+
+1. **Code reviews como enseñanza**: cada comentario en un PR explicaba el *por qué* detrás del *qué*. No bastaba con decir "esto no es óptimo" — había que mostrar la alternativa y explicar las ventajas.
+2. **Sesiones semanales de arquitectura**: los desarrolladores juniors presentaban una decisión técnica que habían tomado durante la semana, explicaban las alternativas que consideraron, y recibían feedback estructurado. Esto construyó pensamiento crítico sobre diseño de software.
+3. **Pair programming en momentos clave**: no todo el tiempo, sino en tareas específicas donde la complejidad lo justificaba — diseñar un modelo de datos complejo, implementar un patrón de concurrencia, o debuggear un problema intermitente.
 
 ## Resultados
 
-Métricas y resultados obtenidos. Contenido próximo.
+- **10+ clientes atendidos** en diversos sectores: startups tecnológicas, empresas de servicios, comercio electrónico, y sistemas legacy.
+- **Cero incidentes de "funciona en mi máquina"** gracias a Docker desde el primer commit en cada proyecto.
+- **Pipelines CI/CD sólidos** que redujeron el tiempo de deploy de horas (despliegues manuales con checklist) a minutos (push a main → build → test → deploy automático).
+- **5+ desarrolladores mentorizados** que crecieron profesionalmente: algunos pasaron de juniors a roles de liderazgo técnico en sus organizaciones.
+- **Modelado de datos en 3 motores de base de datos distintos** (PostgreSQL, MySQL, MongoDB), eligiendo el adecuado para cada contexto en lugar de forzar una solución única.
+- **Cobertura de tests sostenida > 90%** en lógica de negocio en todos los proyectos, garantizando que el código entregado a los clientes fuera confiable y mantenible.
 
 ## Lecciones aprendidas
 
-Lecciones y aprendizajes del proyecto. Contenido próximo.
+No todo proyecto necesita NestJS. Para MVPs, prototipos, o equipos pequeños, Express o Fastify con una estructura de carpetas bien organizada es más que suficiente. La complejidad arquitectónica debe **ganarse** — si un proyecto tiene 3 endpoints y una base de datos, Clean Architecture con 4 capas es over-engineering puro. La lección: la arquitectura adecuada es la que resuelve el problema actual sin limitar el futuro, no la que impone una estructura pensada para un equipo de 20 personas en un proyecto que quizás nunca llegue a ese tamaño.
+
+Docker Compose para desarrollo local es una de las herramientas más subestimadas del ecosistema. La inversión inicial de escribir un `docker-compose.yml` se amortiza en días cuando el equipo incorpora un nuevo miembro, y se multiplica cuando el proyecto escala a múltiples servicios. Cada proyecto debería tenerlo desde el día uno, no como una optimización tardía.
+
+Los tests automatizados no son negociables en consultoría. Cuando entregas código a un cliente, los tests son la única garantía de que el software funciona como se espera. Pero más importante que la cobertura numérica es la calidad de los tests — un test que prueba lo incorrecto o que es frágil (fails por razones ajenas al código) es peor que no tener test. La meta no es 100% de cobertura, es 100% de confianza en las partes críticas.
+
+Mentorear no es solo explicar código — es enseñar a pensar en tradeoffs. La sesión semanal de arquitectura donde los juniors presentaban sus decisiones técnicas fue, con diferencia, la práctica de mentoría más valiosa. Allí aprendían que no hay respuestas correctas absolutas, sino soluciones contextuales que balancean tiempo, calidad, y riesgo. Ese pensamiento crítico es lo que diferencia a un desarrollador que ejecuta tareas de uno que resuelve problemas.

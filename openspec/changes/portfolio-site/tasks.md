@@ -63,12 +63,12 @@ Chain strategy: stacked-to-main
 
 ## Phase 5: MDX Content Batch 2 (full content — pending)
 
-- [ ] 5.1 Write `src/content/projects/belieff.mdx` — placeholder created
-- [ ] 5.2 Write `src/content/projects/adc.mdx` — placeholder created
+- [x] 5.1 Write `src/content/projects/belieff.mdx` — full case study with C4 diagram, CV-accurate frontmatter, 5 sections
+- [x] 5.2 Write `src/content/projects/adc.mdx` — full case study with C4 diagram, CV-accurate frontmatter, 5 sections (ongoing, no end date)
 
 ## Phase 6: Verification
 
-- [ ] 6.1 `astro build` — zero errors (VERIFIED)
+- [x] 6.1 `astro build` — zero errors (VERIFIED)
 - [x] 6.2 All 5 project routes return 200 (build-time generation)
 - [x] 6.3 Unknown slug returns 404 (not in getStaticPaths)
 - [x] 6.4 Dark-only theme — no light mode (inherited from global.css)
