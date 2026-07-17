@@ -1,145 +1,280 @@
 /* ==========================================================================
-   Design Tokens — Dark-Only Terminal Theme
+   Design Tokens — Voltagent-Inspired Dark-Only Design System
    ==========================================================================
-   Three layers:
-     1. Primitives: raw color/space/font values
-     2. Semantic:  mapped to roles (bg, text, border, etc.)
-     3. Component: scoped overrides for specific component groups
+   Source: DESIGN.md (single source of truth for the portfolio)
+   Layers: Colors → Typography → Spacing → Rounded → Component → Aliases
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   1. Primitives
-   -------------------------------------------------------------------------- */
 :root {
-  /* --- Color primitives --- */
-  --color-black:              #000000;
-  --color-gray-950:           #0d0d0d;
-  --color-gray-900:           #1a1a1a;
-  --color-gray-850:           #252525;
-  --color-gray-800:           #2a2a2a;
-  --color-gray-700:           #404040;
-  --color-gray-600:           #606060;
-  --color-gray-400:           #a0a0a0;
-  --color-gray-200:           #c8c8c8;
-  --color-gray-100:           #e0e0e0;
-  --color-white:              #ffffff;
+  /* ========================================================================
+     1. Colors — Brand, Surface, Text, Border
+     ======================================================================== */
 
-  /* Terminal accent primitives */
-  --color-terminal-green:     #00ff41;
-  --color-terminal-amber:     #ffb000;
-  --color-terminal-red:       #ff3355;
-  --color-terminal-cyan:      #00d4ff;
-  --color-terminal-magenta:   #ff66cc;
+  /* Brand & Accent */
+  --color-primary: #00d992;        /* electric green — CTAs ONLY */
+  --color-primary-soft: #2fd6a1;   /* ghost button, focus indicators */
+  --color-primary-deep: #10b981;   /* inline links */
+  --color-on-primary: #101010;     /* text on primary CTA */
 
-  /* Link / accent */
-  --color-brand-blue:         #58a6ff;
+  /* Text */
+  --color-ink: #f2f2f2;           /* default text on dark canvas */
+  --color-ink-strong: #ffffff;    /* hero headlines, high-emphasis */
+  --color-body: #bdbdbd;          /* secondary / body text */
+  --color-mute: #8b949e;          /* captions, fine print */
+  --color-canvas-text-soft: #f5f6f7; /* code mockup text */
 
-  /* --- Typography primitives --- */
+  /* Surface */
+  --color-canvas: #101010;        /* THE only page surface */
+  --color-canvas-soft: #1a1a1a;   /* code blocks, form inputs */
+
+  /* Borders */
+  --color-hairline: #3d3a39;      /* 1px solid — elevation system */
+  --color-hairline-soft: #b8b3b0; /* lighter divider */
+
+  /* ========================================================================
+     2. Typography — Inter + JetBrains Mono (SF Mono substitute)
+     ======================================================================== */
+
+  /* Font families */
+  --font-sans: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, Liberation Mono, monospace;
+
+  /* Display — Inter regular, calm weights */
+  --text-display-xl: 400 60px/60px var(--font-sans);
+  --text-display-xl-tracking: -0.65px;
+  --text-display-lg: 400 36px/40px var(--font-sans);
+  --text-display-lg-tracking: -0.9px;
+  --text-display-md: 700 24px/32px var(--font-sans);
+  --text-display-md-tracking: -0.6px;
+  --text-display-sm: 600 20px/28px var(--font-sans);
+  --text-display-sm-tracking: 0;
+
+  /* Eyebrow — uppercase, tracked */
+  --text-eyebrow: 600 14px/20px var(--font-sans);
+  --text-eyebrow-tracking: 2.52px;
+  --text-eyebrow-lg: 600 18px/28px var(--font-sans);
+  --text-eyebrow-lg-tracking: 0.45px;
+
+  /* Body — Inter regular */
+  --text-body-lg: 400 18px/28px var(--font-sans);
+  --text-body-md: 400 16px/26px var(--font-sans);
+  --text-body-md-strong: 600 16px/24px var(--font-sans);
+  --text-body-sm: 400 14px/20px var(--font-sans);
+  --text-body-sm-strong: 600 14px/23px var(--font-sans);
+
+  /* Caption */
+  --text-caption: 400 12px/16px var(--font-sans);
+  --text-caption-strong: 500 12px/16px var(--font-sans);
+
+  /* Code — SF Mono substitute (JetBrains Mono) */
+  --text-code: 400 13px/18px var(--font-mono);
+  --text-code-strong: 550 13px/16px var(--font-mono);
+
+  /* Button */
+  --text-button: 600 16px/24px var(--font-sans);
+
+  /* ========================================================================
+     3. Spacing
+     ======================================================================== */
+
+  --space-xxs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 40px;
+  --space-5xl: 48px;
+  --space-6xl: 64px;
+
+  /* ========================================================================
+     4. Rounded
+     ======================================================================== */
+
+  --rounded-none: 0px;
+  --rounded-xs: 4px;
+  --rounded-sm: 6px;
+  --rounded-md: 8px;
+  --rounded-pill: 9999px;
+  --rounded-full: 9999px;
+
+  /* ========================================================================
+     5. Component Tokens
+     ======================================================================== */
+
+  /* Navigation */
+  --nav-bar-bg: var(--color-canvas);
+  --nav-bar-text: var(--color-ink);
+  --nav-bar-typo: var(--text-body-sm);
+  --nav-bar-padding: var(--space-md) var(--space-3xl);
+  --nav-link-text: var(--color-body);
+  --nav-link-typo: var(--text-body-sm);
+
+  /* Primary CTA */
+  --button-primary-bg: var(--color-primary);
+  --button-primary-text: var(--color-on-primary);
+  --button-primary-typo: var(--text-button);
+  --button-primary-rounded: var(--rounded-sm);
+  --button-primary-padding: var(--space-md) var(--space-lg);
+
+  /* Outline-on-dark secondary button */
+  --button-outline-bg: var(--color-canvas);
+  --button-outline-text: var(--color-ink);
+  --button-outline-border: var(--color-hairline);
+  --button-outline-typo: var(--text-button);
+  --button-outline-rounded: var(--rounded-sm);
+  --button-outline-padding: var(--space-md) var(--space-lg);
+
+  /* Ghost green button */
+  --button-ghost-green-bg: var(--color-canvas);
+  --button-ghost-green-text: var(--color-primary-soft);
+  --button-ghost-green-typo: var(--text-button);
+  --button-ghost-green-rounded: var(--rounded-sm);
+  --button-ghost-green-padding: var(--space-md) var(--space-lg);
+
+  /* Pill tag */
+  --button-pill-tag-bg: var(--color-canvas);
+  --button-pill-tag-text: var(--color-ink);
+  --button-pill-tag-border: var(--color-hairline);
+  --button-pill-tag-typo: var(--text-body-sm);
+  --button-pill-tag-rounded: var(--rounded-pill);
+  --button-pill-tag-padding: var(--space-xs) var(--space-md);
+
+  /* Feature card */
+  --card-feature-bg: var(--color-canvas);
+  --card-feature-text: var(--color-ink);
+  --card-feature-border: var(--color-hairline);
+  --card-feature-typo: var(--text-body-md);
+  --card-feature-rounded: var(--rounded-md);
+  --card-feature-padding: var(--space-2xl);
+
+  /* Code mockup (terminal card) */
+  --code-mockup-bg: var(--color-canvas);
+  --code-mockup-text: var(--color-ink);
+  --code-mockup-border: var(--color-hairline);
+  --code-mockup-typo: var(--text-code);
+  --code-mockup-rounded: var(--rounded-md);
+  --code-mockup-padding: var(--space-xl);
+
+  /* Code inline chip */
+  --code-inline-chip-bg: var(--color-canvas-soft);
+  --code-inline-chip-text: var(--color-canvas-text-soft);
+  --code-inline-chip-typo: var(--text-code);
+  --code-inline-chip-rounded: var(--rounded-sm);
+  --code-inline-chip-padding: var(--space-xxs) var(--space-sm);
+
+  /* Hero band */
+  --hero-band-bg: var(--color-canvas);
+  --hero-band-text: var(--color-ink-strong);
+  --hero-band-typo: var(--text-display-xl);
+  --hero-band-padding: var(--space-5xl) var(--space-3xl);
+
+  /* Content band */
+  --content-band-bg: var(--color-canvas);
+  --content-band-text: var(--color-ink);
+  --content-band-typo: var(--text-display-lg);
+  --content-band-padding: var(--space-5xl) var(--space-3xl);
+
+  /* Green divider band */
+  --green-divider-bg: var(--color-canvas);
+  --green-divider-border: var(--color-primary);
+
+  /* Footer */
+  --footer-bg: var(--color-canvas);
+  --footer-text: var(--color-body);
+  --footer-typo: var(--text-body-sm);
+  --footer-padding: var(--space-4xl) var(--space-3xl);
+
+  /* Text input */
+  --text-input-bg: var(--color-canvas-soft);
+  --text-input-text: var(--color-ink);
+  --text-input-border: var(--color-hairline);
+  --text-input-typo: var(--text-body-sm);
+  --text-input-rounded: var(--rounded-sm);
+  --text-input-padding: var(--space-md) var(--space-lg);
+
+  /* ========================================================================
+     6. Backward-Compatibility Aliases
+        Bridge old variable names still used by about.astro, contact.astro.
+        Remove once those components are migrated to new token names.
+     ======================================================================== */
 
   /* Font stacks */
-  --font-mono-stack:  'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, 'Courier New', monospace;
-  --font-sans-stack:  Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono-stack: var(--font-mono);
+  --font-sans-stack: var(--font-sans);
 
-  /* --- Spacing primitives --- */
-  --space-xs:   0.25rem;
-  --space-sm:   0.5rem;
-  --space-md:   1rem;
-  --space-lg:   2rem;
-  --space-xl:   4rem;
+  /* Font sizes (size-only for old typography references) */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
 
-  /* --- Layout primitives --- */
-  --content-max-width:  720px;
-  --content-padding:    1.5rem;
+  /* Colors */
+  --color-text-accent: var(--color-primary);
+  --color-text-primary: var(--color-ink);
+  --color-text-secondary: var(--color-body);
+  --color-text-muted: var(--color-mute);
+  --color-terminal-green: var(--color-primary);
+  --color-terminal-cyan: #00d4ff;
+  --color-brand-blue: var(--color-primary-deep);
 
-  /* --- Transitions --- */
-  --transition-fast:    150ms ease;
-  --transition-normal:  250ms ease;
+  /* Backgrounds */
+  --color-bg-primary: var(--color-canvas);
+  --color-bg-secondary: var(--color-canvas-soft);
+  --color-bg-tertiary: var(--color-canvas-soft);
+  --color-bg-code: var(--color-canvas-soft);
 
-  /* --- Border radii --- */
-  --radius-sm:  4px;
-  --radius-md:  8px;
+  /* Borders */
+  --color-border: var(--color-hairline);
+  --color-border-accent: var(--color-primary);
 
-  /* --- Z-index scale --- */
-  --z-base:      0;
-  --z-above:     1;
-  --z-dropdown:  100;
-  --z-overlay:   200;
+  /* Radius */
+  --radius-xs: var(--rounded-xs);
+  --radius-sm: var(--rounded-sm);
+  --radius-md: var(--rounded-md);
 
-  /* --- Typography scale (relative) --- */
-  --font-size-xs:   0.75rem;
-  --font-size-sm:   0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg:   1.125rem;
-  --font-size-xl:   1.5rem;
-  --font-size-2xl:  2rem;
-  --font-size-3xl:  2.5rem;
+  /* Layout */
+  --content-max-width: 720px;
+  --content-padding: 1.5rem;
 
-  --line-height-tight:   1.15;
-  --line-height-normal:  1.5;
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* Line heights */
+  --line-height-tight: 1.15;
+  --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
 
+  /* Font weights */
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-/* --------------------------------------------------------------------------
-   2. Semantic Tokens
-   -------------------------------------------------------------------------- */
+  /* Z-index */
+  --z-base: 0;
+  --z-above: 1;
+  --z-dropdown: 100;
+  --z-overlay: 200;
 
-  /* --- Backgrounds --- */
-  --color-bg-primary:     var(--color-gray-950);
-  --color-bg-secondary:   var(--color-gray-900);
-  --color-bg-tertiary:    var(--color-gray-850);
-  --color-bg-code:        var(--color-black);
-  --color-bg-navigation:  #080808;
-
-  /* --- Text --- */
-  --color-text-primary:    var(--color-gray-100);
-  --color-text-secondary:  var(--color-gray-400);
-  --color-text-muted:      var(--color-gray-600);
-  --color-text-accent:     var(--color-terminal-green);
-  --color-text-link:       var(--color-brand-blue);
-
-  /* --- Borders --- */
-  --color-border:          var(--color-gray-800);
-  --color-border-accent:   color-mix(in srgb, var(--color-terminal-green) 20%, transparent);
-
-  /* --- Surfaces --- */
-  --color-surface:         var(--color-bg-secondary);
-  --color-surface-hover:   var(--color-bg-tertiary);
-
-/* --------------------------------------------------------------------------
-   3. Component-Level Tokens
-   -------------------------------------------------------------------------- */
-
-  /* Nav */
-  --nav-height:               3.5rem;
-  --nav-bg:                   var(--color-bg-navigation);
-  --nav-link-color:           var(--color-text-secondary);
-  --nav-link-active-color:    var(--color-text-accent);
-  --nav-link-hover-color:     var(--color-text-primary);
-
-  /* Terminal Hero */
-  --hero-prompt-color:        var(--color-text-accent);
-  --hero-text-color:          var(--color-text-primary);
-  --hero-cursor-color:        var(--color-text-accent);
-
-  /* Project Cards */
-  --card-bg:                  var(--color-bg-secondary);
-  --card-border:              var(--color-border);
-  --card-border-hover:        var(--color-terminal-green);
-
-  /* Metrics */
-  --metric-up-color:          var(--color-terminal-green);
-  --metric-down-color:        var(--color-terminal-red);
-  --metric-neutral-color:     var(--color-text-muted);
-
-  /* Code blocks */
-  --code-bg:                  var(--color-bg-code);
-  --code-font:                var(--font-mono-stack);
-
-  /* Selection */
-  --selection-bg:             var(--color-terminal-green);
-  --selection-color:          var(--color-black);
+  /* Misc old component tokens */
+  --nav-height: 3.5rem;
+  --nav-bg: var(--color-canvas);
+  --nav-link-color: var(--color-body);
+  --nav-link-active-color: var(--color-primary);
+  --nav-link-hover-color: var(--color-ink);
+  --hero-prompt-color: var(--color-primary);
+  --hero-text-color: var(--color-ink);
+  --hero-cursor-color: var(--color-primary);
+  --card-bg: var(--color-canvas-soft);
+  --card-border: var(--color-hairline);
+  --card-border-hover: var(--color-primary);
+  --code-bg: var(--color-canvas-soft);
+  --code-font: var(--font-mono);
+  --selection-bg: var(--color-primary);
+  --selection-color: var(--color-on-primary);
 }

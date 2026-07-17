@@ -1,174 +1,219 @@
 ---
 ---
 
-<section class="terminal-hero">
-  <div class="terminal-window">
-    <div class="terminal-header">
-      <span class="terminal-dot terminal-dot--red"></span>
-      <span class="terminal-dot terminal-dot--amber"></span>
-      <span class="terminal-dot terminal-dot--green"></span>
-      <span class="terminal-title">bash — portfolio</span>
+<section class="hero-band">
+  <div class="hero-container">
+    <p class="eyebrow">DESARROLLADOR BACKEND</p>
+    <h1 class="hero-headline">Diseño sistemas,<br/>no features.</h1>
+    <p class="hero-subtitle">
+      6+ años construyendo sistemas distribuidos, liderando arquitecturas serverless
+      y diseñando APIs que escalan. TypeScript, Node.js, Go, AWS.
+    </p>
+
+    <div class="code-mockup">
+      <div class="code-mockup-header">
+        <div class="code-mockup-dots">
+          <span class="dot dot--red"></span>
+          <span class="dot dot--amber"></span>
+          <span class="dot dot--green"></span>
+        </div>
+        <span class="code-mockup-title">~/portfolio — zsh</span>
+        <button class="code-copy-btn" aria-label="Copiar código" title="Copiar código">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+      </div>
+      <pre class="code-mockup-body"><code><span class="code-line"><span class="prompt">❯</span> <span class="cmd">whoami</span></span>
+<span class="code-line"><span class="output">backend engineer · arquitectura · sistemas distribuidos</span></span>
+<span class="code-line"> </span>
+<span class="code-line"><span class="prompt">❯</span> <span class="cmd">cat</span> <span class="arg">~/acerca</span></span>
+<span class="code-line"><span class="output">Diseño sistemas que resuelven problemas reales.</span></span>
+<span class="code-line"><span class="output">Mido resultados, no líneas de código.</span></span>
+<span class="code-line"><span class="output">Automatizo lo repetible, documento lo complejo.</span></span>
+<span class="code-line"> </span>
+<span class="code-line"><span class="prompt">❯</span> <span class="cmd">./status</span> <span class="flag">--live</span></span>
+<span class="code-line"><span class="status-dot"></span><span class="output output--live">disponible para proyectos · latam · remoto</span></span>
+<span class="code-line"> </span>
+<span class="code-line"><span class="prompt">❯</span><span class="cursor" aria-hidden="true">▊</span></span></code></pre>
     </div>
 
-    <div class="terminal-body">
-      <div class="terminal-line">
-        <span class="prompt">$</span>
-        <span class="command">whoami</span>
-      </div>
-      <div class="terminal-line terminal-line--output">
-        <span class="output">backend engineer · arquitectura · sistemas distribuidos</span>
-      </div>
-
-      <div class="terminal-line">
-        <span class="prompt">$</span>
-        <span class="command">ls <span class="arg">~/projects/</span></span>
-      </div>
-      <div class="terminal-line terminal-line--output">
-        <span class="output">
-          <a href="/projects/infotec" class="output-link">infotec</a>
-          <a href="/projects/happyguest" class="output-link">happyguest</a>
-          <a href="/projects/derby" class="output-link">derby</a>
-          <a href="/projects/belieff" class="output-link">belieff</a>
-          <a href="/projects/adc" class="output-link">adc</a>
-        </span>
-      </div>
-
-      <div class="terminal-line">
-        <span class="prompt">$</span>
-        <span class="command">cat <span class="arg">~/manifesto.txt</span></span>
-      </div>
-      <div class="terminal-line terminal-line--output">
-        <pre class="manifesto">
-Diseño sistemas, no features.
-Mido resultados, no líneas de código.
-Automatizo lo repetible, documento lo complejo.</pre>
-      </div>
-
-      <div class="terminal-line terminal-line--bottom">
-        <span class="prompt">$</span>
-        <span class="command">./status <span class="arg">--live</span></span>
-      </div>
-      <div class="terminal-line terminal-line--output">
-        <span class="output output--live">disponible para proyectos · latam · remoto</span>
-      </div>
-
-      <div class="terminal-line terminal-line--cursor">
-        <span class="prompt">$</span>
-        <span class="cursor" aria-hidden="true">▊</span>
-      </div>
+    <div class="hero-cta">
+      <a href="/projects" class="button-primary">Ver proyectos</a>
+      <a href="/contact" class="button-outline">Contacto</a>
     </div>
   </div>
 </section>
 
 <style>
-  .terminal-hero {
-    padding: var(--space-xl) var(--content-padding) var(--space-lg);
-    max-width: var(--content-max-width);
+  /* ========================================================================
+     Hero Band — container for the entire hero section
+     ======================================================================== */
+  .hero-band {
+    background: var(--hero-band-bg);
+    padding: var(--hero-band-padding);
+  }
+
+  .hero-container {
+    max-width: 1280px;
     margin: 0 auto;
   }
 
-  .terminal-window {
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    font-family: var(--font-mono-stack);
+  /* ========================================================================
+     Eyebrow — uppercase, tracked, Inter 600
+     ======================================================================== */
+  .eyebrow {
+    font: var(--text-eyebrow);
+    letter-spacing: var(--text-eyebrow-tracking);
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: var(--space-lg);
+    margin-block-end: var(--space-lg);
   }
 
-  .terminal-header {
+  /* ========================================================================
+     Headline — Inter 60px regular, NOT mono, weight 400
+     ======================================================================== */
+  .hero-headline {
+    font: var(--text-display-xl);
+    letter-spacing: var(--text-display-xl-tracking);
+    color: var(--color-ink-strong);
+    margin-bottom: var(--space-xl);
+    margin-block-end: var(--space-xl);
+    max-width: 14ch;
+  }
+
+  /* ========================================================================
+     Subtitle — body-lg
+     ======================================================================== */
+  .hero-subtitle {
+    font: var(--text-body-lg);
+    color: var(--color-body);
+    max-width: 60ch;
+    margin-bottom: var(--space-3xl);
+    margin-block-end: var(--space-3xl);
+  }
+
+  /* ========================================================================
+     Code Mockup — terminal-style card with hairline border
+     ======================================================================== */
+  .code-mockup {
+    background: var(--code-mockup-bg);
+    border: 1px solid var(--code-mockup-border);
+    border-radius: var(--code-mockup-rounded);
+    overflow: hidden;
+    margin-bottom: var(--space-3xl);
+    margin-block-end: var(--space-3xl);
+    max-width: 680px;
+  }
+
+  .code-mockup-header {
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    padding: var(--space-sm) var(--space-md);
-    background-color: var(--color-bg-tertiary);
-    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-sm) var(--space-lg);
+    border-bottom: 1px solid var(--color-hairline);
+    background: var(--color-canvas);
   }
 
-  .terminal-dot {
+  .code-mockup-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
     width: 10px;
     height: 10px;
-    border-radius: 50%;
+    border-radius: var(--rounded-full);
   }
 
-  .terminal-dot--red { background-color: #ff5f56; }
-  .terminal-dot--amber { background-color: #ffbd2e; }
-  .terminal-dot--green { background-color: #27c93f; }
+  .dot--red { background: #ff5f56; }
+  .dot--amber { background: #ffbd2e; }
+  .dot--green { background: #27c93f; }
 
-  .terminal-title {
+  .code-mockup-title {
+    font: var(--text-code);
+    color: var(--color-mute);
+    margin-left: var(--space-sm);
+  }
+
+  .code-copy-btn {
     margin-left: auto;
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-  }
-
-  .terminal-body {
-    padding: var(--space-lg);
-  }
-
-  .terminal-line {
     display: flex;
-    align-items: baseline;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-xs);
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--rounded-xs);
+    color: var(--color-mute);
+    transition: color var(--transition-fast), background var(--transition-fast);
   }
 
-  .terminal-line--output {
-    margin-bottom: var(--space-md);
-    padding-left: calc(1.5ch + var(--space-sm));
+  .code-copy-btn:hover {
+    color: var(--color-ink);
+    background: var(--color-canvas-soft);
   }
 
-  .terminal-line--bottom {
-    margin-bottom: var(--space-xs);
-  }
-
-  .terminal-line--cursor {
-    margin-top: var(--space-md);
-    margin-bottom: 0;
-  }
-
-  .prompt {
-    color: var(--hero-prompt-color);
-    user-select: none;
-  }
-
-  .command {
-    color: var(--color-text-primary);
-  }
-
-  .arg {
-    color: var(--color-terminal-cyan);
-  }
-
-  .output {
-    color: var(--hero-text-color);
-  }
-
-  .output--live {
-    color: var(--color-terminal-green);
-  }
-
-  .output-link {
-    color: var(--color-text-link);
-    text-decoration: none;
-    margin-right: var(--space-sm);
-    transition: color var(--transition-fast);
-  }
-
-  .output-link:hover {
-    color: var(--color-text-primary);
-    text-decoration: underline;
-  }
-
-  .manifesto {
+  /* ========================================================================
+     Code body — mono, 13px, terminal lines
+     ======================================================================== */
+  .code-mockup-body {
     margin: 0;
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-relaxed);
-    color: var(--hero-text-color);
+    padding: var(--code-mockup-padding);
+    font: var(--code-mockup-typo);
+    color: var(--color-ink);
+    overflow-x: auto;
+  }
+
+  .code-line {
+    display: block;
     white-space: pre;
   }
 
+  .prompt {
+    color: var(--color-mute);
+    user-select: none;
+    margin-right: 0.5ch;
+  }
+
+  .cmd {
+    color: var(--color-ink-strong);
+  }
+
+  .arg,
+  .flag {
+    color: var(--color-primary-soft);
+  }
+
+  .output {
+    color: var(--color-body);
+    margin-left: 1.5ch;
+  }
+
+  .output--live {
+    color: var(--color-primary);
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--rounded-full);
+    background: var(--color-primary);
+    margin-right: 0.75ch;
+    vertical-align: middle;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
   .cursor {
-    color: var(--hero-cursor-color);
+    color: var(--color-primary);
+    margin-left: 0.5ch;
     animation: blink 1s step-end infinite;
   }
 
@@ -176,21 +221,108 @@ Automatizo lo repetible, documento lo complejo.</pre>
     50% { opacity: 0; }
   }
 
-  @media (max-width: 640px) {
-    .terminal-body {
-      padding: var(--space-md);
+  /* ========================================================================
+     CTA Buttons
+     ======================================================================== */
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+
+  .button-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--button-primary-bg);
+    color: var(--button-primary-text);
+    font: var(--button-primary-typo);
+    padding: var(--button-primary-padding);
+    border-radius: var(--button-primary-rounded);
+    text-decoration: none;
+    transition: opacity var(--transition-fast);
+    border: none;
+    cursor: pointer;
+  }
+
+  .button-primary:hover {
+    opacity: 0.9;
+  }
+
+  .button-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--button-outline-bg);
+    color: var(--button-outline-text);
+    font: var(--button-outline-typo);
+    padding: var(--button-outline-padding);
+    border-radius: var(--button-outline-rounded);
+    border: 1px solid var(--button-outline-border);
+    text-decoration: none;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+    cursor: pointer;
+  }
+
+  .button-outline:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  /* ========================================================================
+     Responsive
+     ======================================================================== */
+  @media (max-width: 768px) {
+    .hero-band {
+      padding: var(--space-4xl) var(--space-lg);
     }
 
-    .manifesto {
-      font-size: var(--font-size-sm);
+    .hero-headline {
+      font-size: 32px;
+      line-height: 36px;
+      max-width: 100%;
     }
 
-    .terminal-line {
-      flex-wrap: wrap;
+    .hero-subtitle {
+      font-size: 16px;
     }
 
-    .terminal-line--output {
-      padding-left: calc(1.5ch + var(--space-sm));
+    .code-mockup {
+      max-width: 100%;
+    }
+
+    .code-mockup-body {
+      font-size: 12px;
+    }
+
+    .hero-cta {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .button-primary,
+    .button-outline {
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-band {
+      padding: var(--space-3xl) var(--space-md);
+    }
+
+    .code-mockup-header {
+      padding: var(--space-xs) var(--space-sm);
+    }
+
+    .code-mockup-title {
+      font-size: 11px;
+    }
+
+    .code-copy-btn {
+      width: 24px;
+      height: 24px;
     }
   }
 </style>

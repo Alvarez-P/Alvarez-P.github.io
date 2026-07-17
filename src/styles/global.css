@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Global Styles — Reset & Base
+   Global Styles — Reset & Base (DESIGN.md)
    ========================================================================== */
 
 /* --- Box-sizing reset --- */
@@ -17,26 +17,23 @@
 
 /* --- Document --- */
 html {
-  /* Smooth scrolling for same-page links */
   scroll-behavior: smooth;
-
-  /* Use the full height for sticky footers */
   height: 100%;
 }
 
 body {
   min-height: 100%;
 
-  font-family: var(--font-sans-stack);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-normal);
-  line-height: var(--line-height-normal);
-
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-primary);
+  /* Body: Inter 16px, --color-body */
+  font: var(--text-body-md);
+  color: var(--color-body);
+  background-color: var(--color-canvas);
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Inter OpenType features per DESIGN.md */
+  font-feature-settings: "calt" on, "rlig" on;
 }
 
 /* --- Images --- */
@@ -51,13 +48,13 @@ canvas {
 
 /* --- Links --- */
 a {
-  color: var(--color-text-link);
+  color: var(--color-primary-deep);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--color-text-primary);
+  color: var(--color-primary);
 }
 
 /* --- Buttons --- */
@@ -69,49 +66,42 @@ button {
   background: none;
 }
 
-/* --- Code --- */
+/* --- Code & Pre --- */
 code,
 pre {
-  font-family: var(--font-mono-stack);
+  font-family: var(--font-mono);
+  font: var(--text-code);
 }
 
 code {
   font-size: 0.875em;
   padding: 0.125em 0.375em;
-  background-color: var(--color-bg-code);
-  border-radius: var(--radius-sm);
+  background-color: var(--color-canvas-soft);
+  border-radius: var(--rounded-xs);
 }
 
 pre {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-relaxed);
   overflow-x: auto;
 }
 
 pre code {
   padding: 0;
   background: none;
+  font-size: inherit;
 }
 
 /* --- Headings --- */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-mono-stack);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-ink-strong);
   text-wrap: balance;
 }
 
-h1 { font-size: var(--font-size-3xl); }
-h2 { font-size: var(--font-size-2xl); }
-h3 { font-size: var(--font-size-xl); }
-h4 { font-size: var(--font-size-lg); }
-h5 { font-size: var(--font-size-base); }
-h6 { font-size: var(--font-size-sm); }
-
 /* --- Paragraphs --- */
 p {
-  margin-block-end: var(--space-md);
+  margin-block-end: var(--space-lg);
 }
 
 /* --- Lists --- */
@@ -126,14 +116,14 @@ li {
 /* --- Horizontal rules --- */
 hr {
   border: none;
-  border-top: 1px solid var(--color-border);
-  margin-block: var(--space-lg);
+  border-top: 1px solid var(--color-hairline);
+  margin-block: var(--space-3xl);
 }
 
 /* --- Selection --- */
 ::selection {
-  background-color: var(--selection-bg);
-  color: var(--selection-color);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
 }
 
 /* --- Scrollbar (webkit) --- */
@@ -142,16 +132,16 @@ hr {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-bg-primary);
+  background: var(--color-canvas);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-gray-700);
-  border-radius: var(--radius-sm);
+  background: var(--color-hairline);
+  border-radius: var(--rounded-xs);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-600);
+  background: var(--color-mute);
 }
 
 /* --- Utility: visually hidden --- */

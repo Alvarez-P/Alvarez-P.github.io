@@ -17,17 +17,24 @@ const links: NavLink[] = [
 <nav class="site-nav">
   <div class="nav-inner">
     <a href="/" class="nav-brand" aria-label="Inicio">
-      <span class="nav-prompt">$</span>
-      <span class="nav-cwd">~/portfolio</span>
+      <span class="nav-brand-text">gentleman<span class="nav-brand-accent">.</span>dev</span>
     </a>
 
     <ul class="nav-links">
       {links.map((link) => {
-        const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
+        const isActive =
+          currentPath === link.href ||
+          (link.href !== '/' && currentPath.startsWith(link.href));
+
         return (
           <li>
-            <a href={link.href} class:list={['nav-link', { 'nav-link--active': isActive }]}>
-              {isActive ? <span class="nav-indicator" aria-hidden="true">▸</span> : <span class="nav-indicator nav-indicator--inactive" aria-hidden="true">&nbsp;</span>}
+            <a
+              href={link.href}
+              class:list={['nav-link', { 'nav-link--active': isActive }]}
+            >
+              {isActive ? (
+                <span class="nav-indicator" aria-hidden="true"></span>
+              ) : null}
               {link.label}
             </a>
           </li>
@@ -42,43 +49,40 @@ const links: NavLink[] = [
     position: sticky;
     top: 0;
     z-index: var(--z-overlay);
-    background-color: var(--nav-bg);
-    border-bottom: 1px solid var(--color-border);
+    background: var(--nav-bar-bg);
+    border-bottom: 1px solid var(--color-hairline);
   }
 
   .nav-inner {
-    max-width: var(--content-max-width);
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 var(--content-padding);
+    padding: var(--nav-bar-padding);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: var(--nav-height);
   }
 
   .nav-brand {
+    text-decoration: none;
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    text-decoration: none;
+    font: var(--text-body-md-strong);
+    color: var(--color-ink);
     transition: color var(--transition-fast);
   }
 
   .nav-brand:hover {
-    color: var(--color-text-primary);
+    color: var(--color-primary);
   }
 
-  .nav-prompt {
-    color: var(--color-text-accent);
+  .nav-brand-accent {
+    color: var(--color-primary);
   }
 
   .nav-links {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--space-xs);
     list-style: none;
     padding: 0;
     margin: 0;
@@ -87,36 +91,44 @@ const links: NavLink[] = [
   .nav-link {
     display: flex;
     align-items: center;
-    gap: var(--space-xs);
+    gap: var(--space-xxs);
     padding: var(--space-xs) var(--space-sm);
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-sm);
-    color: var(--nav-link-color);
+    font: var(--nav-link-typo);
+    color: var(--nav-link-text);
     text-decoration: none;
-    border-radius: var(--radius-sm);
-    transition: color var(--transition-fast), background-color var(--transition-fast);
+    border-radius: var(--rounded-sm);
+    transition: color var(--transition-fast);
   }
 
   .nav-link:hover {
-    color: var(--nav-link-hover-color);
-    background-color: var(--color-bg-tertiary);
+    color: var(--color-ink);
   }
 
   .nav-link--active {
-    color: var(--nav-link-active-color);
+    color: var(--color-ink);
   }
 
+  /* Active indicator: green underline/dot per ex-app-shell-row pattern */
   .nav-indicator {
-    font-size: var(--font-size-xs);
-  }
-
-  .nav-indicator--inactive {
-    visibility: hidden;
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: var(--rounded-full);
+    background-color: var(--color-primary);
+    flex-shrink: 0;
   }
 
   @media (max-width: 480px) {
-    .nav-cwd {
-      display: none;
+    .nav-inner {
+      padding: var(--space-sm) var(--space-lg);
+    }
+
+    .nav-links {
+      gap: var(--space-xxs);
+    }
+
+    .nav-link {
+      padding: var(--space-xxs) var(--space-xs);
     }
   }
 </style>

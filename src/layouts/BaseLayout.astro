@@ -1,14 +1,15 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 
-// Self-hosted fonts
-import '@fontsource/jetbrains-mono/400.css';
-import '@fontsource/jetbrains-mono/700.css';
+// Self-hosted fonts — Inter (400, 500, 600, 700) + JetBrains Mono (400, 500)
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
 
-// Global styles
+// Global styles — tokens first, then base
 import '../styles/tokens.css';
 import '../styles/global.css';
 
@@ -20,7 +21,10 @@ export interface Props {
   description?: string;
 }
 
-const { title = 'backend engineer · portfolio', description = 'Backend engineer specializing in distributed systems, clean architecture, and serverless.' } = Astro.props;
+const {
+  title = 'backend engineer · portfolio',
+  description = 'Backend engineer specializing in distributed systems, clean architecture, and serverless.',
+} = Astro.props;
 ---
 
 <html lang="es">
@@ -53,8 +57,9 @@ const { title = 'backend engineer · portfolio', description = 'Backend engineer
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <span class="footer-prompt">$</span>
-        <span class="footer-text">./portfolio --built-with &copy; {new Date().getFullYear()}</span>
+        <span class="footer-cr">© {new Date().getFullYear()}</span>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <span class="footer-text">gentleman programming</span>
       </div>
     </footer>
   </body>
@@ -62,23 +67,27 @@ const { title = 'backend engineer · portfolio', description = 'Backend engineer
 
 <style>
   .site-footer {
-    padding: var(--space-lg) var(--content-padding);
-    border-top: 1px solid var(--color-border);
-    margin-top: var(--space-xl);
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    font: var(--footer-typo);
+    padding: var(--footer-padding);
   }
 
   .footer-inner {
-    max-width: var(--content-max-width);
+    max-width: 1280px;
     margin: 0 auto;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-sm);
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
   }
 
-  .footer-prompt {
-    color: var(--color-text-accent);
+  .footer-cr,
+  .footer-text {
+    color: var(--color-mute);
+  }
+
+  .footer-sep {
+    color: var(--color-hairline);
   }
 </style>
