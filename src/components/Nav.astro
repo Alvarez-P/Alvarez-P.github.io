@@ -1,0 +1,122 @@
+---
+const currentPath = Astro.url.pathname;
+
+interface NavLink {
+  href: string;
+  label: string;
+}
+
+const links: NavLink[] = [
+  { href: '/', label: 'inicio' },
+  { href: '/projects', label: 'proyectos' },
+  { href: '/about', label: 'about' },
+  { href: '/contact', label: 'contacto' },
+];
+---
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand" aria-label="Inicio">
+      <span class="nav-prompt">$</span>
+      <span class="nav-cwd">~/portfolio</span>
+    </a>
+
+    <ul class="nav-links">
+      {links.map((link) => {
+        const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
+        return (
+          <li>
+            <a href={link.href} class:list={['nav-link', { 'nav-link--active': isActive }]}>
+              {isActive ? <span class="nav-indicator" aria-hidden="true">▸</span> : <span class="nav-indicator nav-indicator--inactive" aria-hidden="true">&nbsp;</span>}
+              {link.label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-overlay);
+    background-color: var(--nav-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .nav-inner {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 0 var(--content-padding);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--nav-height);
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-mono-stack);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .nav-brand:hover {
+    color: var(--color-text-primary);
+  }
+
+  .nav-prompt {
+    color: var(--color-text-accent);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    font-family: var(--font-mono-stack);
+    font-size: var(--font-size-sm);
+    color: var(--nav-link-color);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+  }
+
+  .nav-link:hover {
+    color: var(--nav-link-hover-color);
+    background-color: var(--color-bg-tertiary);
+  }
+
+  .nav-link--active {
+    color: var(--nav-link-active-color);
+  }
+
+  .nav-indicator {
+    font-size: var(--font-size-xs);
+  }
+
+  .nav-indicator--inactive {
+    visibility: hidden;
+  }
+
+  @media (max-width: 480px) {
+    .nav-cwd {
+      display: none;
+    }
+  }
+</style>

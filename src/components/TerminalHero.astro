@@ -1,0 +1,196 @@
+---
+---
+
+<section class="terminal-hero">
+  <div class="terminal-window">
+    <div class="terminal-header">
+      <span class="terminal-dot terminal-dot--red"></span>
+      <span class="terminal-dot terminal-dot--amber"></span>
+      <span class="terminal-dot terminal-dot--green"></span>
+      <span class="terminal-title">bash — portfolio</span>
+    </div>
+
+    <div class="terminal-body">
+      <div class="terminal-line">
+        <span class="prompt">$</span>
+        <span class="command">whoami</span>
+      </div>
+      <div class="terminal-line terminal-line--output">
+        <span class="output">backend engineer · arquitectura · sistemas distribuidos</span>
+      </div>
+
+      <div class="terminal-line">
+        <span class="prompt">$</span>
+        <span class="command">ls <span class="arg">~/projects/</span></span>
+      </div>
+      <div class="terminal-line terminal-line--output">
+        <span class="output">
+          <a href="/projects/infotec" class="output-link">infotec</a>
+          <a href="/projects/happyguest" class="output-link">happyguest</a>
+          <a href="/projects/derby" class="output-link">derby</a>
+          <a href="/projects/belieff" class="output-link">belieff</a>
+          <a href="/projects/adc" class="output-link">adc</a>
+        </span>
+      </div>
+
+      <div class="terminal-line">
+        <span class="prompt">$</span>
+        <span class="command">cat <span class="arg">~/manifesto.txt</span></span>
+      </div>
+      <div class="terminal-line terminal-line--output">
+        <pre class="manifesto">
+Diseño sistemas, no features.
+Mido resultados, no líneas de código.
+Automatizo lo repetible, documento lo complejo.</pre>
+      </div>
+
+      <div class="terminal-line terminal-line--bottom">
+        <span class="prompt">$</span>
+        <span class="command">./status <span class="arg">--live</span></span>
+      </div>
+      <div class="terminal-line terminal-line--output">
+        <span class="output output--live">disponible para proyectos · latam · remoto</span>
+      </div>
+
+      <div class="terminal-line terminal-line--cursor">
+        <span class="prompt">$</span>
+        <span class="cursor" aria-hidden="true">▊</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .terminal-hero {
+    padding: var(--space-xl) var(--content-padding) var(--space-lg);
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+  }
+
+  .terminal-window {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    font-family: var(--font-mono-stack);
+  }
+
+  .terminal-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background-color: var(--color-bg-tertiary);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .terminal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .terminal-dot--red { background-color: #ff5f56; }
+  .terminal-dot--amber { background-color: #ffbd2e; }
+  .terminal-dot--green { background-color: #27c93f; }
+
+  .terminal-title {
+    margin-left: auto;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  .terminal-body {
+    padding: var(--space-lg);
+  }
+
+  .terminal-line {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+  }
+
+  .terminal-line--output {
+    margin-bottom: var(--space-md);
+    padding-left: calc(1.5ch + var(--space-sm));
+  }
+
+  .terminal-line--bottom {
+    margin-bottom: var(--space-xs);
+  }
+
+  .terminal-line--cursor {
+    margin-top: var(--space-md);
+    margin-bottom: 0;
+  }
+
+  .prompt {
+    color: var(--hero-prompt-color);
+    user-select: none;
+  }
+
+  .command {
+    color: var(--color-text-primary);
+  }
+
+  .arg {
+    color: var(--color-terminal-cyan);
+  }
+
+  .output {
+    color: var(--hero-text-color);
+  }
+
+  .output--live {
+    color: var(--color-terminal-green);
+  }
+
+  .output-link {
+    color: var(--color-text-link);
+    text-decoration: none;
+    margin-right: var(--space-sm);
+    transition: color var(--transition-fast);
+  }
+
+  .output-link:hover {
+    color: var(--color-text-primary);
+    text-decoration: underline;
+  }
+
+  .manifesto {
+    margin: 0;
+    font-family: var(--font-mono-stack);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: var(--hero-text-color);
+    white-space: pre;
+  }
+
+  .cursor {
+    color: var(--hero-cursor-color);
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  @media (max-width: 640px) {
+    .terminal-body {
+      padding: var(--space-md);
+    }
+
+    .manifesto {
+      font-size: var(--font-size-sm);
+    }
+
+    .terminal-line {
+      flex-wrap: wrap;
+    }
+
+    .terminal-line--output {
+      padding-left: calc(1.5ch + var(--space-sm));
+    }
+  }
+</style>

@@ -1,0 +1,288 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="about · backend engineer · portfolio">
+  <article class="about-page">
+    <header class="about-header">
+      <h1 class="about-title">
+        <span class="prompt">$</span> cat <span class="arg">~/about.md</span>
+      </h1>
+    </header>
+
+    <!-- Stack -->
+    <section class="about-section">
+      <h2 class="section-heading">
+        <span class="prompt">$</span> <span class="section-command">./stack</span>
+      </h2>
+      <div class="stack-grid">
+        <div class="stack-item">
+          <span class="stack-category">Languages</span>
+          <span class="stack-value">TypeScript, JavaScript, Go, Python</span>
+        </div>
+        <div class="stack-item">
+          <span class="stack-category">Backend</span>
+          <span class="stack-value">Node.js, NestJS, Express, Fastify</span>
+        </div>
+        <div class="stack-item">
+          <span class="stack-category">Cloud &amp; Infra</span>
+          <span class="stack-value">AWS (Lambda, API GW, DynamoDB, SQS, S3), Docker, Serverless Framework</span>
+        </div>
+        <div class="stack-item">
+          <span class="stack-category">Databases</span>
+          <span class="stack-value">PostgreSQL, MongoDB, Redis</span>
+        </div>
+        <div class="stack-item">
+          <span class="stack-category">Frontend</span>
+          <span class="stack-value">React, Next.js, Astro</span>
+        </div>
+        <div class="stack-item">
+          <span class="stack-category">Testing</span>
+          <span class="stack-value">Jest, Vitest, Playwright, Supertest</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specialties -->
+    <section class="about-section">
+      <h2 class="section-heading">
+        <span class="prompt">$</span> <span class="section-command">./specialties</span>
+      </h2>
+      <div class="specialties-list">
+        {[
+          'Serverless Architecture',
+          'Domain-Driven Design (DDD)',
+          'Clean Architecture / Hexagonal',
+          'Microservices & Event-Driven Systems',
+          'CQRS / Event Sourcing',
+          'APIs RESTful & GraphQL',
+        ].map((specialty) => (
+          <span class="specialty-tag">{specialty}</span>
+        ))}
+      </div>
+    </section>
+
+    <!-- Philosophy -->
+    <section class="about-section">
+      <h2 class="section-heading">
+        <span class="prompt">$</span> <span class="section-command">cat <span class="arg">~/filosofia.txt</span></span>
+      </h2>
+      <div class="philosophy-block">
+        <p class="philosophy-text">
+          Arquitectura sobre frameworks. Un sistema bien diseñado trasciende cualquier tecnología.
+        </p>
+        <p class="philosophy-text">
+          Métricas sobre líneas de código. Mido resultados, no esfuerzo. El código es un medio, no un fin.
+        </p>
+        <p class="philosophy-text">
+          Automatización sobre repetición. Si lo haces dos veces, automatízalo. Si lo haces tres, documéntalo.
+        </p>
+        <p class="philosophy-text">
+          Claridad sobre ingenio. El código se escribe una vez, se lee cien. Prioriza la legibilidad.
+        </p>
+      </div>
+    </section>
+
+    <!-- AI Workflow -->
+    <section class="about-section">
+      <h2 class="section-heading">
+        <span class="prompt">$</span> <span class="section-command">cat <span class="arg">~/ai-workflow.md</span></span>
+      </h2>
+      <div class="ai-list">
+        <div class="ai-item">
+          <span class="ai-label">LLMs</span>
+          <span class="ai-value">Claude, GPT-4, Gemini</span>
+        </div>
+        <div class="ai-item">
+          <span class="ai-label">AI Agents</span>
+          <span class="ai-value">Claude Code, OpenCode / Gentle AI, Cursor</span>
+        </div>
+        <div class="ai-item">
+          <span class="ai-label">Automation</span>
+          <span class="ai-value">n8n, Make, custom pipelines</span>
+        </div>
+        <div class="ai-item">
+          <span class="ai-label">RAG &amp; Knowledge</span>
+          <span class="ai-value">Embeddings, Vector DBs (Pinecone, Supabase), RAG pipelines</span>
+        </div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .about-page {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: var(--space-lg) var(--content-padding) var(--space-xl);
+  }
+
+  .about-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .about-title {
+    font-family: var(--font-mono-stack);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+  }
+
+  .about-title .prompt {
+    color: var(--color-text-accent);
+  }
+
+  .about-title .arg {
+    color: var(--color-terminal-cyan);
+  }
+
+  .about-section {
+    margin-bottom: var(--space-xl);
+  }
+
+  .section-heading {
+    font-family: var(--font-mono-stack);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .section-heading .prompt {
+    color: var(--color-text-accent);
+  }
+
+  .section-heading .section-command {
+    color: var(--color-text-primary);
+  }
+
+  .section-heading .arg {
+    color: var(--color-terminal-cyan);
+  }
+
+  /* Stack Grid */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .stack-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-md);
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .stack-category {
+    font-family: var(--font-mono-stack);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stack-value {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* Specialties */
+  .specialties-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .specialty-tag {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    font-family: var(--font-mono-stack);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--transition-fast);
+  }
+
+  .specialty-tag:hover {
+    border-color: var(--color-border-accent);
+  }
+
+  /* Philosophy */
+  .philosophy-block {
+    padding: var(--space-md);
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-text-accent);
+    border-radius: var(--radius-sm);
+  }
+
+  .philosophy-text {
+    font-family: var(--font-mono-stack);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-md);
+  }
+
+  .philosophy-text:last-child {
+    margin-bottom: 0;
+  }
+
+  /* AI List */
+  .ai-list {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .ai-item {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .ai-label {
+    font-family: var(--font-mono-stack);
+    font-size: var(--font-size-sm);
+    color: var(--color-terminal-cyan);
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+
+  .ai-value {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+  }
+
+  @media (max-width: 640px) {
+    .stack-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-item {
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .ai-label {
+      min-width: auto;
+    }
+  }
+</style>

@@ -38,12 +38,12 @@ Chain strategy: stacked-to-main
 
 ## Phase 2: Shell + Static Pages
 
-- [ ] 2.1 Create `src/components/Nav.astro` — mono links, active accent
-- [ ] 2.2 Create `src/components/TerminalHero.astro` — `$` prompt line
-- [ ] 2.3 Create `src/layouts/BaseLayout.astro` — ClientRouter, SEO, Nav, fonts
-- [ ] 2.4 Update `src/pages/index.astro` — BaseLayout + TerminalHero
-- [ ] 2.5 Create `src/pages/about.astro` — hardcoded stack/philosophy
-- [ ] 2.6 Create `src/pages/contact.astro` — GitHub, LinkedIn, email
+- [x] 2.1 Create `src/components/Nav.astro` — mono links, active accent
+- [x] 2.2 Create `src/components/TerminalHero.astro` — `$` prompt line
+- [x] 2.3 Create `src/layouts/BaseLayout.astro` — ClientRouter, SEO, Nav, fonts
+- [x] 2.4 Update `src/pages/index.astro` — BaseLayout + TerminalHero
+- [x] 2.5 Create `src/pages/about.astro` — hardcoded stack/philosophy
+- [x] 2.6 Create `src/pages/contact.astro` — GitHub, LinkedIn, email
 
 ## Phase 3: Project Components + Routes
 
