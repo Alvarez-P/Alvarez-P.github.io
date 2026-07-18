@@ -1,305 +1,392 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import SpotifyLayout from '../layouts/SpotifyLayout.astro';
 ---
 
-<BaseLayout title="about · backend engineer · portfolio">
-  <article class="about-page">
-    <header class="about-header">
-      <h1 class="about-title">
-        <span class="prompt">$</span> cat <span class="arg">~/about.md</span>
-      </h1>
+<SpotifyLayout title="Sobre mí · Adolfo Alvarez" playerTitle="Sobre mí">
+  <article class="bio-page">
+    <header class="bio-header">
+      <div class="bio-avatar">
+        <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" class="bio-svg">
+          <defs><linearGradient id="bio-av" x1="0" y1="0" x2="160" y2="160"><stop offset="0%" stop-color="#1ed760"/><stop offset="100%" stop-color="#0d5c2e"/></linearGradient></defs>
+          <rect width="160" height="160" fill="url(#bio-av)"/>
+          <g fill="#fff" opacity="0.1">
+            <circle cx="80" cy="44" r="38"/>
+            <circle cx="80" cy="140" r="52"/>
+          </g>
+          <g fill="none" stroke="#fff" stroke-width="0.5" opacity="0.1">
+            <circle cx="80" cy="80" r="72"/><circle cx="80" cy="80" r="56"/><circle cx="80" cy="80" r="40"/>
+          </g>
+          <g fill="#fff" opacity="0.18">
+            <circle cx="48" cy="36" r="2"/><circle cx="112" cy="36" r="2"/><circle cx="80" cy="20" r="2"/><circle cx="60" cy="52" r="1.5"/><circle cx="100" cy="52" r="1.5"/>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <p class="bio-label">Perfil</p>
+        <h1 class="bio-name">Adolfo Esteban Alvarez Pacheco</h1>
+        <p class="bio-role">Backend · Fullstack · Cloud</p>
+        <p class="bio-location">Mérida, Yucatán, México</p>
+      </div>
     </header>
 
-    <!-- Stack -->
-    <section class="about-section">
-      <h2 class="section-heading">
-        <span class="prompt">$</span> <span class="section-command">./stack</span>
-      </h2>
-      <div class="stack-grid">
-        <div class="stack-item">
-          <span class="stack-category">Languages</span>
-          <span class="stack-value">TypeScript, JavaScript, Go, Python</span>
-        </div>
-        <div class="stack-item">
-          <span class="stack-category">Backend</span>
-          <span class="stack-value">Node.js, NestJS, Express, Fastify</span>
-        </div>
-        <div class="stack-item">
-          <span class="stack-category">Cloud &amp; Infra</span>
-          <span class="stack-value">AWS (Lambda, API GW, DynamoDB, SQS, S3), Docker, Serverless Framework</span>
-        </div>
-        <div class="stack-item">
-          <span class="stack-category">Databases</span>
-          <span class="stack-value">PostgreSQL, MongoDB, Redis</span>
-        </div>
-        <div class="stack-item">
-          <span class="stack-category">Frontend</span>
-          <span class="stack-value">React, Next.js, Astro</span>
-        </div>
-        <div class="stack-item">
-          <span class="stack-category">Testing</span>
-          <span class="stack-value">Jest, Vitest, Playwright, Supertest</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Specialties -->
-    <section class="about-section">
-      <h2 class="section-heading">
-        <span class="prompt">$</span> <span class="section-command">./specialties</span>
-      </h2>
-      <div class="specialties-list">
+    <section class="section">
+      <h2 class="section-title">Stack principal</h2>
+      <div class="track-list">
         {[
-          'Serverless Architecture',
-          'Domain-Driven Design (DDD)',
-          'Clean Architecture / Hexagonal',
-          'Microservices & Event-Driven Systems',
-          'CQRS / Event Sourcing',
-          'APIs RESTful & GraphQL',
-        ].map((specialty) => (
-          <span class="specialty-tag">{specialty}</span>
+          { name: 'TypeScript · JavaScript · Node.js', meta: 'Experiencia laboral', star: true },
+          { name: 'NestJS · Express · Fastify · Hono', meta: 'Frameworks backend' },
+          { name: 'AWS Lambda · API GW · DynamoDB · SQS · S3', meta: 'Cloud & Serverless' },
+          { name: 'PostgreSQL · MongoDB · Redis', meta: 'Bases de datos' },
+          { name: 'Prisma · TypeORM · Drizzle', meta: 'ORMs' },
+          { name: 'React · Next.js · Astro', meta: 'Frontend' },
+          { name: 'Kafka · RabbitMQ', meta: 'Mensajería' },
+          { name: 'Jest · Vitest · Playwright', meta: 'Testing' },
+          { name: 'Claude · GPT-4 · Gemini · LangChain', meta: 'AI & LLMs' },
+          { name: 'Docker · n8n', meta: 'Infra & Automatización' },
+          { name: 'Python · Java · Go', meta: 'Conocimiento (sin experiencia laboral)' },
+        ].map((track, i) => (
+          <div class="track-row">
+            <span class="track-num">
+              <span class="track-num-text">{String(i + 1).padStart(2, '0')}</span>
+              <span class="track-play-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+              <span class="track-eq">
+                <span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span>
+              </span>
+            </span>
+            <div class="track-info">
+              <span class="track-name">{track.name}</span>
+              <span class="track-meta">{track.meta}</span>
+            </div>
+            <span class="track-dur">{track.star ? '⭐' : ''}</span>
+          </div>
         ))}
       </div>
     </section>
 
-    <!-- Philosophy -->
-    <section class="about-section">
-      <h2 class="section-heading">
-        <span class="prompt">$</span> <span class="section-command">cat <span class="arg">~/filosofia.txt</span></span>
-      </h2>
-      <div class="philosophy-block">
-        <p class="philosophy-text">
-          Arquitectura sobre frameworks. Un sistema bien diseñado trasciende cualquier tecnología.
-        </p>
-        <p class="philosophy-text">
-          Métricas sobre líneas de código. Mido resultados, no esfuerzo. El código es un medio, no un fin.
-        </p>
-        <p class="philosophy-text">
-          Automatización sobre repetición. Si lo haces dos veces, automatízalo. Si lo haces tres, documéntalo.
-        </p>
-        <p class="philosophy-text">
-          Claridad sobre ingenio. El código se escribe una vez, se lee cien. Prioriza la legibilidad.
-        </p>
+    <section class="section">
+      <h2 class="section-title">Especialidades</h2>
+      <div class="genre-grid">
+        {[
+          'Serverless Architecture',
+          'Domain-Driven Design (DDD)',
+          'Clean Architecture / Hexagonal',
+          'Microservices & Event-Driven',
+          'CQRS / Event Sourcing',
+          'APIs RESTful & GraphQL',
+          'SOLID',
+          'Patrones de Diseño',
+        ].map((genre) => (
+          <div class="genre-card">
+            <span class="genre-name">{genre}</span>
+          </div>
+        ))}
       </div>
     </section>
 
-    <!-- AI Workflow -->
-    <section class="about-section">
-      <h2 class="section-heading">
-        <span class="prompt">$</span> <span class="section-command">cat <span class="arg">~/ai-workflow.md</span></span>
-      </h2>
-      <div class="ai-list">
-        <div class="ai-item">
-          <span class="ai-label">LLMs</span>
-          <span class="ai-value">Claude, GPT-4, Gemini</span>
-        </div>
-        <div class="ai-item">
-          <span class="ai-label">AI Agents</span>
-          <span class="ai-value">Claude Code, OpenCode / Gentle AI, Cursor</span>
-        </div>
-        <div class="ai-item">
-          <span class="ai-label">Automation</span>
-          <span class="ai-value">n8n, Make, custom pipelines</span>
-        </div>
-        <div class="ai-item">
-          <span class="ai-label">RAG &amp; Knowledge</span>
-          <span class="ai-value">Embeddings, Vector DBs (Pinecone, Supabase), RAG pipelines</span>
-        </div>
+    <section class="section">
+      <h2 class="section-title">Filosofía</h2>
+      <div class="philosophy-list">
+        {[
+          { title: 'Arquitectura sobre frameworks', detail: 'Un sistema bien diseñado trasciende cualquier tecnología.' },
+          { title: 'Métricas sobre líneas de código', detail: 'Mido resultados, no esfuerzo. El código es un medio, no un fin.' },
+          { title: 'Automatización sobre repetición', detail: 'Si lo haces dos veces, automatízalo. Si lo haces tres, documéntalo.' },
+          { title: 'Claridad sobre ingenio', detail: 'El código se escribe una vez, se lee cien. Prioriza la legibilidad.' },
+        ].map((item) => (
+          <div class="philo-item">
+            <span class="philo-title">{item.title}</span>
+            <span class="philo-detail">{item.detail}</span>
+          </div>
+        ))}
       </div>
     </section>
   </article>
-</BaseLayout>
+</SpotifyLayout>
 
 <style>
-  .about-page {
-    max-width: var(--content-max-width);
+  .bio-page {
+    max-width: 800px;
+    padding: var(--space-3xl);
     margin: 0 auto;
-    padding: var(--space-lg) var(--content-padding) var(--space-xl);
+    animation: pageIn 0.6s ease-out;
   }
 
-  .about-header {
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .bio-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xl);
+    padding-top: var(--space-4xl);
+    margin-bottom: var(--space-4xl);
+  }
+
+  .bio-avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(30, 215, 96, 0.15), 0 0 0 6px rgba(30, 215, 96, 0.05);
+  }
+
+  .bio-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .bio-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30,215,96,0.12) 0%, transparent 70%);
+    z-index: -1;
+    transition: opacity 0.4s ease;
+  }
+
+  .bio-avatar:hover::after { opacity: 1; }
+
+  .bio-avatar:hover {
+    transform: scale(1.04);
+    box-shadow: 0 12px 40px rgba(30, 215, 96, 0.25), 0 0 0 10px rgba(30, 215, 96, 0.08);
+  }
+
+  .bio-label {
+    font: var(--text-body-sm);
+    color: var(--spotify-text-subdued);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-xs);
+  }
+
+  .bio-name {
+    font: var(--text-display-lg);
+    color: var(--spotify-text-primary);
+    margin-bottom: var(--space-xs);
+  }
+
+  .bio-role {
+    font: var(--text-body);
+    color: var(--spotify-green);
+    margin-bottom: 2px;
+  }
+
+  .bio-location {
+    font: var(--text-body-sm);
+    color: var(--spotify-text-subdued);
+  }
+
+  .section { margin-bottom: var(--space-4xl); }
+
+  .section-title {
+    font: var(--text-display-sm);
+    color: var(--spotify-text-primary);
     margin-bottom: var(--space-xl);
   }
 
-  .about-title {
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-normal);
-    color: var(--color-text-primary);
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-sm);
-  }
+  /* ── Track list ───────────────────────────────────────────────── */
+  .track-list { display: flex; flex-direction: column; }
 
-  .about-title .prompt {
-    color: var(--color-text-accent);
-  }
-
-  .about-title .arg {
-    color: var(--color-terminal-cyan);
-  }
-
-  .about-section {
-    margin-bottom: var(--space-xl);
-  }
-
-  .section-heading {
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-normal);
-    color: var(--color-text-secondary);
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-md);
-    padding-bottom: var(--space-sm);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .section-heading .prompt {
-    color: var(--color-text-accent);
-  }
-
-  .section-heading .section-command {
-    color: var(--color-text-primary);
-  }
-
-  .section-heading .arg {
-    color: var(--color-terminal-cyan);
-  }
-
-  /* Stack Grid */
-  .stack-grid {
+  .track-row {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: 48px 1fr 40px;
+    align-items: center;
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-sm);
+    transition: background 0.2s ease;
+    cursor: default;
+  }
+
+  .track-row:hover { background: rgba(255,255,255,0.06); }
+  .track-row:hover .track-name { color: var(--spotify-green); }
+
+  .track-num {
+    width: 48px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .track-num-text {
+    font: var(--text-body);
+    color: var(--spotify-text-subdued);
+    transition: opacity 0.15s ease;
+  }
+
+  .track-row:hover .track-num-text { opacity: 0; }
+
+  .track-play-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--spotify-green);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  .track-row:hover .track-play-icon {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .track-eq {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    padding-bottom: 10px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .track-row:hover .track-eq { opacity: 1; }
+  .track-row:hover .track-play-icon { display: none; }
+
+  .eq-bar {
+    width: 3px;
+    background: var(--spotify-green);
+    border-radius: 2px;
+    animation: eqBounce 0.8s ease-in-out infinite;
+    animation-play-state: paused;
+  }
+
+  .track-row:hover .eq-bar { animation-play-state: running; }
+
+  .eq-bar:nth-child(1) { height: 10px; animation-delay: 0s; }
+  .eq-bar:nth-child(2) { height: 16px; animation-delay: 0.15s; }
+  .eq-bar:nth-child(3) { height: 8px; animation-delay: 0.05s; }
+
+  @keyframes eqBounce {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.4); }
+  }
+
+  .track-info { display: flex; flex-direction: column; gap: 2px; }
+
+  .track-name {
+    font: var(--text-body);
+    color: var(--spotify-text-primary);
+    transition: color 0.15s ease;
+  }
+
+  .track-meta {
+    font: var(--text-body-sm);
+    color: var(--spotify-text-subdued);
+  }
+
+  .track-dur {
+    font: var(--text-body-sm);
+    color: var(--spotify-text-subdued);
+    text-align: right;
+  }
+
+  /* ── Genre cards ──────────────────────────────────────────────── */
+  .genre-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--space-md);
   }
 
-  .stack-item {
+  .genre-card {
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, #1a2a1a 0%, #1a1f1a 100%);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease, box-shadow 0.25s ease;
+    cursor: default;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .genre-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(30,215,96,0.04);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .genre-card:hover::after { opacity: 1; }
+
+  .genre-card:hover {
+    background: linear-gradient(135deg, #1f3d1f 0%, #1f261f 100%);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transform: scale(1.04) translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .genre-name {
+    font: var(--text-heading);
+    color: var(--spotify-text-primary);
+    transition: color 0.2s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  .genre-card:hover .genre-name { color: var(--spotify-green); }
+
+  /* ── Philosophy ───────────────────────────────────────────────── */
+  .philosophy-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .philo-item {
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
-    padding: var(--space-md);
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
+    padding: var(--space-lg);
+    background: rgba(255,255,255,0.03);
+    border-radius: var(--radius-md);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: default;
+    border-left: 3px solid transparent;
   }
 
-  .stack-category {
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-xs);
-    color: var(--color-text-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .philo-item:hover {
+    background: rgba(255,255,255,0.06);
+    transform: translateX(4px);
+    border-left-color: var(--spotify-green);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
   }
 
-  .stack-value {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-primary);
-    line-height: var(--line-height-relaxed);
+  .philo-title {
+    font: var(--text-heading);
+    color: var(--spotify-text-primary);
+    transition: color 0.2s ease;
   }
 
-  /* Specialties */
-  .specialties-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-sm);
+  .philo-item:hover .philo-title { color: var(--spotify-green); }
+
+  .philo-detail {
+    font: var(--text-body-sm);
+    color: var(--spotify-text-secondary);
   }
 
-  .specialty-tag {
-    display: inline-block;
-    padding: var(--space-xs) var(--space-sm);
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    transition: border-color var(--transition-fast);
-  }
-
-  .specialty-tag:hover {
-    border-color: var(--color-border-accent);
-  }
-
-  /* Philosophy */
-  .philosophy-block {
-    padding: var(--space-md);
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-left: 3px solid var(--color-text-accent);
-    border-radius: var(--radius-sm);
-  }
-
-  .philosophy-text {
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-relaxed);
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-md);
-  }
-
-  .philosophy-text:last-child {
-    margin-bottom: 0;
-  }
-
-  /* AI List */
-  .ai-list {
-    display: grid;
-    gap: var(--space-sm);
-  }
-
-  .ai-item {
-    display: flex;
-    gap: var(--space-md);
-    padding: var(--space-sm) var(--space-md);
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-  }
-
-  .ai-label {
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-sm);
-    color: var(--color-terminal-cyan);
-    min-width: 120px;
-    flex-shrink: 0;
-  }
-
-  .ai-value {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-primary);
-  }
-
-  @media (max-width: 640px) {
-    .stack-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .ai-item {
-      flex-direction: column;
-      gap: var(--space-xs);
-    }
-
-    .ai-label {
-      min-width: auto;
-    }
-  }
-
-  /* ========================================================================
-     Desktop — ≥1024px: explicit 3-column stack grid, larger layout
-     ======================================================================== */
-  @media (min-width: 1024px) {
-    .stack-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .about-page {
-      max-width: 960px;
-    }
-
-    .about-title {
-      font-size: var(--font-size-xl);
-    }
+  @media (max-width: 768px) {
+    .bio-header { flex-direction: column; text-align: center; }
+    .bio-avatar { width: 120px; height: 120px; }
+    .bio-name { font-size: 32px; line-height: 36px; }
+    .genre-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>

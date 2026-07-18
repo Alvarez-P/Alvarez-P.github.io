@@ -1,7 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 
-// Self-hosted fonts — Inter (400, 500, 600, 700) + JetBrains Mono (400, 500)
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
@@ -9,21 +8,22 @@ import '@fontsource/inter/700.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 
-// Global styles — tokens first, then base
 import '../styles/tokens.css';
 import '../styles/global.css';
 
-// Components
-import Nav from '../components/Nav.astro';
+import Sidebar from '../components/Sidebar.astro';
+import PlayerBar from '../components/PlayerBar.astro';
 
 export interface Props {
   title?: string;
   description?: string;
+  playerTitle?: string;
 }
 
 const {
   title = 'backend engineer · portfolio',
   description = 'Backend engineer specializing in distributed systems, clean architecture, and serverless.',
+  playerTitle,
 } = Astro.props;
 ---
 
@@ -33,61 +33,38 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-
-    <!-- Primary Meta Tags -->
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
-
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-
-    <!-- View Transitions -->
     <ClientRouter />
     <slot name="head" />
   </head>
   <body>
-    <Nav />
-
-    <main transition:animate="slide">
-      <slot />
-    </main>
-
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <span class="footer-cr">© {new Date().getFullYear()}</span>
-        <span class="footer-sep" aria-hidden="true">·</span>
-        <span class="footer-text">gentleman programming</span>
-      </div>
-    </footer>
+    <div class="app-layout">
+      <Sidebar />
+      <main class="main-content" transition:animate="slide">
+        <slot />
+      </main>
+    </div>
+    <PlayerBar title={playerTitle ?? title} subtitle="Adolfo Esteban Alvarez Pacheco" />
   </body>
 </html>
 
 <style>
-  .site-footer {
-    background: var(--footer-bg);
-    color: var(--footer-text);
-    font: var(--footer-typo);
-    padding: var(--footer-padding);
-  }
-
-  .footer-inner {
-    max-width: 1280px;
-    margin: 0 auto;
+  .app-layout {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-sm);
+    min-height: calc(100vh - var(--player-height));
+    background: var(--spotify-base);
   }
 
-  .footer-cr,
-  .footer-text {
-    color: var(--color-mute);
-  }
-
-  .footer-sep {
-    color: var(--color-hairline);
+  .main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    padding-bottom: var(--player-height);
+    overflow-y: auto;
+    scrollbar-gutter: stable;
   }
 </style>

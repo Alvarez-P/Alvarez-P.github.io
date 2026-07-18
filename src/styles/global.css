@@ -1,63 +1,45 @@
 /* ==========================================================================
-   Global Styles — Reset & Base (DESIGN.md)
+   Global Styles — Spotify base
    ========================================================================== */
 
-/* --- Box-sizing reset --- */
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
-}
-
-/* --- Remove default margin/padding --- */
-* {
   margin: 0;
   padding: 0;
 }
 
-/* --- Document --- */
 html {
   scroll-behavior: smooth;
   height: 100%;
+  scrollbar-gutter: stable;
+  overflow-y: auto;
 }
 
 body {
   min-height: 100%;
-
-  /* Body: Inter 16px, --color-body */
-  font: var(--text-body-md);
-  color: var(--color-body);
-  background-color: var(--color-canvas);
-
+  font: var(--text-body);
+  color: var(--spotify-text-primary);
+  background: var(--spotify-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* Inter OpenType features per DESIGN.md */
-  font-feature-settings: "calt" on, "rlig" on;
 }
 
-/* --- Images --- */
-img,
-svg,
-video,
-canvas {
+img, svg, video, canvas {
   display: block;
   max-width: 100%;
   height: auto;
 }
 
-/* --- Links --- */
 a {
-  color: var(--color-primary-deep);
+  color: var(--spotify-text-primary);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--color-primary);
+  color: var(--spotify-text-primary);
 }
 
-/* --- Buttons --- */
 button {
   font: inherit;
   color: inherit;
@@ -66,85 +48,44 @@ button {
   background: none;
 }
 
-/* --- Code & Pre --- */
-code,
-pre {
+code, pre {
   font-family: var(--font-mono);
   font: var(--text-code);
 }
 
-code {
-  font-size: 0.875em;
-  padding: 0.125em 0.375em;
-  background-color: var(--color-canvas-soft);
-  border-radius: var(--rounded-xs);
-}
-
-pre {
-  overflow-x: auto;
-}
-
-pre code {
-  padding: 0;
-  background: none;
-  font-size: inherit;
-}
-
-/* --- Headings --- */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--color-ink-strong);
-  text-wrap: balance;
+  color: var(--spotify-text-primary);
 }
 
-/* --- Paragraphs --- */
-p {
-  margin-block-end: var(--space-lg);
-}
-
-/* --- Lists --- */
-ul, ol {
-  padding-inline-start: 1.25em;
-}
-
-li {
-  margin-block-end: var(--space-xs);
-}
-
-/* --- Horizontal rules --- */
 hr {
   border: none;
-  border-top: 1px solid var(--color-hairline);
+  border-top: 1px solid #333333;
   margin-block: var(--space-3xl);
 }
 
-/* --- Selection --- */
 ::selection {
-  background-color: var(--color-primary);
-  color: var(--color-on-primary);
+  background-color: var(--spotify-green);
+  color: #000000;
 }
 
-/* --- Scrollbar (webkit) --- */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-canvas);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-hairline);
-  border-radius: var(--rounded-xs);
+  background: #535353;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-mute);
+  background: #6a6a6a;
 }
 
-/* --- Utility: visually hidden --- */
 .sr-only {
   position: absolute;
   width: 1px;

@@ -1,83 +1,46 @@
 /* ==========================================================================
-   Design Tokens — Voltagent-Inspired Dark-Only Design System
-   ==========================================================================
-   Source: DESIGN.md (single source of truth for the portfolio)
-   Layers: Colors → Typography → Spacing → Rounded → Component → Aliases
+   Design Tokens — Spotify-Inspired Dark System
    ========================================================================== */
 
 :root {
-  /* ========================================================================
-     1. Colors — Brand, Surface, Text, Border
-     ======================================================================== */
+  /* ── Surfaces ─────────────────────────────────────────────────── */
+  --spotify-base: #121212;
+  --spotify-elevated: #181818;
+  --spotify-highlight: #282828;
+  --spotify-sidebar: #000000;
+  --spotify-player: #181818;
 
-  /* Brand & Accent */
-  --color-primary: #00d992;        /* electric green — CTAs ONLY */
-  --color-primary-soft: #2fd6a1;   /* ghost button, focus indicators */
-  --color-primary-deep: #10b981;   /* inline links */
-  --color-on-primary: #101010;     /* text on primary CTA */
+  /* ── Text ─────────────────────────────────────────────────────── */
+  --spotify-text-primary: #ffffff;
+  --spotify-text-secondary: #b3b3b3;
+  --spotify-text-subdued: #6a6a6a;
 
-  /* Text */
-  --color-ink: #f2f2f2;           /* default text on dark canvas */
-  --color-ink-strong: #ffffff;    /* hero headlines, high-emphasis */
-  --color-body: #bdbdbd;          /* secondary / body text */
-  --color-mute: #8b949e;          /* captions, fine print */
-  --color-canvas-text-soft: #f5f6f7; /* code mockup text */
+  /* ── Accent ───────────────────────────────────────────────────── */
+  --spotify-green: #1ed760;
+  --spotify-green-hover: #1fdf64;
 
-  /* Surface */
-  --color-canvas: #101010;        /* THE only page surface */
-  --color-canvas-soft: #1a1a1a;   /* code blocks, form inputs */
+  /* ── Progress bar colors ──────────────────────────────────────── */
+  --spotify-progress-bg: #4d4d4d;
+  --spotify-progress-fg: #ffffff;
 
-  /* Borders */
-  --color-hairline: #3d3a39;      /* 1px solid — elevation system */
-  --color-hairline-soft: #b8b3b0; /* lighter divider */
+  /* ── Typography ───────────────────────────────────────────────── */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
-  /* ========================================================================
-     2. Typography — Inter + JetBrains Mono (SF Mono substitute)
-     ======================================================================== */
-
-  /* Font families */
-  --font-sans: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, Liberation Mono, monospace;
-
-  /* Display — Inter regular, calm weights */
-  --text-display-xl: 400 60px/60px var(--font-sans);
-  --text-display-xl-tracking: -0.65px;
-  --text-display-lg: 400 36px/40px var(--font-sans);
-  --text-display-lg-tracking: -0.9px;
-  --text-display-md: 700 24px/32px var(--font-sans);
-  --text-display-md-tracking: -0.6px;
-  --text-display-sm: 600 20px/28px var(--font-sans);
-  --text-display-sm-tracking: 0;
-
-  /* Eyebrow — uppercase, tracked */
-  --text-eyebrow: 600 14px/20px var(--font-sans);
-  --text-eyebrow-tracking: 2.52px;
-  --text-eyebrow-lg: 600 18px/28px var(--font-sans);
-  --text-eyebrow-lg-tracking: 0.45px;
-
-  /* Body — Inter regular */
-  --text-body-lg: 400 18px/28px var(--font-sans);
-  --text-body-md: 400 16px/26px var(--font-sans);
-  --text-body-md-strong: 600 16px/24px var(--font-sans);
+  --text-display-xl: 700 72px/76px var(--font-sans);
+  --text-display-lg: 700 48px/52px var(--font-sans);
+  --text-display-md: 700 32px/36px var(--font-sans);
+  --text-display-sm: 700 24px/28px var(--font-sans);
+  --text-heading: 600 16px/20px var(--font-sans);
+  --text-body: 400 16px/24px var(--font-sans);
   --text-body-sm: 400 14px/20px var(--font-sans);
-  --text-body-sm-strong: 600 14px/23px var(--font-sans);
-
-  /* Caption */
-  --text-caption: 400 12px/16px var(--font-sans);
-  --text-caption-strong: 500 12px/16px var(--font-sans);
-
-  /* Code — SF Mono substitute (JetBrains Mono) */
+  --text-body-xs: 400 12px/16px var(--font-sans);
+  --text-caption: 400 11px/14px var(--font-sans);
+  --text-link: 600 14px/20px var(--font-sans);
+  --text-button: 700 14px/18px var(--font-sans);
   --text-code: 400 13px/18px var(--font-mono);
-  --text-code-strong: 550 13px/16px var(--font-mono);
 
-  /* Button */
-  --text-button: 600 16px/24px var(--font-sans);
-
-  /* ========================================================================
-     3. Spacing
-     ======================================================================== */
-
-  --space-xxs: 2px;
+  /* ── Spacing ──────────────────────────────────────────────────── */
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 12px;
@@ -89,192 +52,96 @@
   --space-5xl: 48px;
   --space-6xl: 64px;
 
-  /* ========================================================================
-     4. Rounded
-     ======================================================================== */
+  /* ── Radius ───────────────────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+  --radius-round: 50%;
 
-  --rounded-none: 0px;
-  --rounded-xs: 4px;
-  --rounded-sm: 6px;
-  --rounded-md: 8px;
-  --rounded-pill: 9999px;
-  --rounded-full: 9999px;
+  /* ── Layout ───────────────────────────────────────────────────── */
+  --sidebar-width: 241px;
+  --player-height: 72px;
 
-  /* ========================================================================
-     5. Component Tokens
-     ======================================================================== */
+  /* ── Transitions ──────────────────────────────────────────────── */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
 
-  /* Navigation */
-  --nav-bar-bg: var(--color-canvas);
-  --nav-bar-text: var(--color-ink);
-  --nav-bar-typo: var(--text-body-sm);
-  --nav-bar-padding: var(--space-md) var(--space-3xl);
-  --nav-link-text: var(--color-body);
-  --nav-link-typo: var(--text-body-sm);
-
-  /* Primary CTA */
-  --button-primary-bg: var(--color-primary);
-  --button-primary-text: var(--color-on-primary);
-  --button-primary-typo: var(--text-button);
-  --button-primary-rounded: var(--rounded-sm);
-  --button-primary-padding: var(--space-md) var(--space-lg);
-
-  /* Outline-on-dark secondary button */
-  --button-outline-bg: var(--color-canvas);
-  --button-outline-text: var(--color-ink);
-  --button-outline-border: var(--color-hairline);
-  --button-outline-typo: var(--text-button);
-  --button-outline-rounded: var(--rounded-sm);
-  --button-outline-padding: var(--space-md) var(--space-lg);
-
-  /* Ghost green button */
-  --button-ghost-green-bg: var(--color-canvas);
-  --button-ghost-green-text: var(--color-primary-soft);
-  --button-ghost-green-typo: var(--text-button);
-  --button-ghost-green-rounded: var(--rounded-sm);
-  --button-ghost-green-padding: var(--space-md) var(--space-lg);
-
-  /* Pill tag */
-  --button-pill-tag-bg: var(--color-canvas);
-  --button-pill-tag-text: var(--color-ink);
-  --button-pill-tag-border: var(--color-hairline);
-  --button-pill-tag-typo: var(--text-body-sm);
-  --button-pill-tag-rounded: var(--rounded-pill);
-  --button-pill-tag-padding: var(--space-xs) var(--space-md);
-
-  /* Feature card */
-  --card-feature-bg: var(--color-canvas);
-  --card-feature-text: var(--color-ink);
-  --card-feature-border: var(--color-hairline);
-  --card-feature-typo: var(--text-body-md);
-  --card-feature-rounded: var(--rounded-md);
-  --card-feature-padding: var(--space-2xl);
-
-  /* Code mockup (terminal card) */
-  --code-mockup-bg: var(--color-canvas);
-  --code-mockup-text: var(--color-ink);
-  --code-mockup-border: var(--color-hairline);
-  --code-mockup-typo: var(--text-code);
-  --code-mockup-rounded: var(--rounded-md);
-  --code-mockup-padding: var(--space-xl);
-
-  /* Code inline chip */
-  --code-inline-chip-bg: var(--color-canvas-soft);
-  --code-inline-chip-text: var(--color-canvas-text-soft);
-  --code-inline-chip-typo: var(--text-code);
-  --code-inline-chip-rounded: var(--rounded-sm);
-  --code-inline-chip-padding: var(--space-xxs) var(--space-sm);
-
-  /* Hero band */
-  --hero-band-bg: var(--color-canvas);
-  --hero-band-text: var(--color-ink-strong);
-  --hero-band-typo: var(--text-display-xl);
-  --hero-band-padding: var(--space-5xl) var(--space-3xl);
-
-  /* Content band */
-  --content-band-bg: var(--color-canvas);
-  --content-band-text: var(--color-ink);
-  --content-band-typo: var(--text-display-lg);
-  --content-band-padding: var(--space-5xl) var(--space-3xl);
-
-  /* Green divider band */
-  --green-divider-bg: var(--color-canvas);
-  --green-divider-border: var(--color-primary);
-
-  /* Footer */
-  --footer-bg: var(--color-canvas);
-  --footer-text: var(--color-body);
-  --footer-typo: var(--text-body-sm);
-  --footer-padding: var(--space-4xl) var(--space-3xl);
-
-  /* Text input */
-  --text-input-bg: var(--color-canvas-soft);
-  --text-input-text: var(--color-ink);
-  --text-input-border: var(--color-hairline);
-  --text-input-typo: var(--text-body-sm);
-  --text-input-rounded: var(--rounded-sm);
-  --text-input-padding: var(--space-md) var(--space-lg);
-
-  /* ========================================================================
-     6. Backward-Compatibility Aliases
-        Bridge old variable names still used by about.astro, contact.astro.
-        Remove once those components are migrated to new token names.
-     ======================================================================== */
-
-  /* Font stacks */
+  /* ── Legacy aliases (for about.astro, contact.astro compat) ───── */
   --font-mono-stack: var(--font-mono);
   --font-sans-stack: var(--font-sans);
-
-  /* Font sizes (size-only for old typography references) */
   --font-size-xs: 12px;
   --font-size-sm: 14px;
   --font-size-base: 16px;
   --font-size-lg: 18px;
   --font-size-xl: 20px;
 
-  /* Colors */
-  --color-text-accent: var(--color-primary);
-  --color-text-primary: var(--color-ink);
-  --color-text-secondary: var(--color-body);
-  --color-text-muted: var(--color-mute);
-  --color-terminal-green: var(--color-primary);
+  --color-primary: var(--spotify-green);
+  --color-primary-soft: var(--spotify-green-hover);
+  --color-primary-deep: var(--spotify-green);
+  --color-on-primary: #000000;
+  --color-ink: var(--spotify-text-primary);
+  --color-ink-strong: var(--spotify-text-primary);
+  --color-body: var(--spotify-text-secondary);
+  --color-mute: var(--spotify-text-subdued);
+  --color-canvas: var(--spotify-base);
+  --color-canvas-soft: var(--spotify-elevated);
+
+  --color-hairline: #333333;
+  --color-hairline-soft: #404040;
+
+  --color-text-accent: var(--spotify-green);
+  --color-text-primary: var(--spotify-text-primary);
+  --color-text-secondary: var(--spotify-text-secondary);
+  --color-text-muted: var(--spotify-text-subdued);
   --color-terminal-cyan: #00d4ff;
-  --color-brand-blue: var(--color-primary-deep);
+  --color-brand-blue: var(--spotify-green);
 
-  /* Backgrounds */
-  --color-bg-primary: var(--color-canvas);
-  --color-bg-secondary: var(--color-canvas-soft);
-  --color-bg-tertiary: var(--color-canvas-soft);
-  --color-bg-code: var(--color-canvas-soft);
+  --color-bg-primary: var(--spotify-base);
+  --color-bg-secondary: var(--spotify-elevated);
+  --color-bg-tertiary: var(--spotify-highlight);
+  --color-bg-code: var(--spotify-elevated);
 
-  /* Borders */
-  --color-border: var(--color-hairline);
-  --color-border-accent: var(--color-primary);
+  --color-border: #333333;
+  --color-border-accent: var(--spotify-green);
 
-  /* Radius */
-  --radius-xs: var(--rounded-xs);
-  --radius-sm: var(--rounded-sm);
-  --radius-md: var(--rounded-md);
+  --radius-xs: var(--radius-sm);
+  --radius-sm: var(--radius-md);
 
-  /* Layout */
-  --content-max-width: 720px;
+  --content-max-width: 100%;
   --content-padding: 1.5rem;
 
-  /* Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
 
-  /* Line heights */
   --line-height-tight: 1.15;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
 
-  /* Font weights */
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  /* Z-index */
   --z-base: 0;
   --z-above: 1;
   --z-dropdown: 100;
   --z-overlay: 200;
 
-  /* Misc old component tokens */
-  --nav-height: 3.5rem;
-  --nav-bg: var(--color-canvas);
-  --nav-link-color: var(--color-body);
-  --nav-link-active-color: var(--color-primary);
-  --nav-link-hover-color: var(--color-ink);
-  --hero-prompt-color: var(--color-primary);
-  --hero-text-color: var(--color-ink);
-  --hero-cursor-color: var(--color-primary);
-  --card-bg: var(--color-canvas-soft);
-  --card-border: var(--color-hairline);
-  --card-border-hover: var(--color-primary);
-  --code-bg: var(--color-canvas-soft);
-  --code-font: var(--font-mono);
-  --selection-bg: var(--color-primary);
-  --selection-color: var(--color-on-primary);
+  /* ── Component tokens ─────────────────────────────────────────── */
+  --card-padding: var(--space-lg);
+  --card-bg: var(--spotify-elevated);
+  --card-hover-bg: var(--spotify-highlight);
+  --card-radius: var(--radius-lg);
+
+  --button-primary-bg: var(--spotify-green);
+  --button-primary-text: #000000;
+  --button-primary-padding: var(--space-sm) var(--space-3xl);
+  --button-primary-rounded: var(--radius-pill);
+
+  --button-outline-bg: transparent;
+  --button-outline-text: var(--spotify-text-primary);
+  --button-outline-border: var(--spotify-text-subdued);
+  --button-outline-padding: var(--space-xs) var(--space-2xl);
+  --button-outline-rounded: var(--radius-pill);
 }

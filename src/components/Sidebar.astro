@@ -1,0 +1,265 @@
+---
+const currentPath = Astro.url.pathname;
+
+interface NavItem {
+  href: string;
+  icon: string;
+  label: string;
+}
+
+const navItems: NavItem[] = [
+  { href: '/', icon: 'home', label: 'Inicio' },
+  { href: '/experiencia', icon: 'briefcase', label: 'Experiencia' },
+  { href: '/about', icon: 'person', label: 'Sobre mí' },
+  { href: '/contact', icon: 'mail', label: 'Contacto' },
+];
+
+function iconSvg(name: string) {
+  const icons: Record<string, string> = {
+    home: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>`,
+    briefcase: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><circle cx="12" cy="14" r="2"/></svg>`,
+    person: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
+    mail: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg>`,
+  };
+  return icons[name] ?? '';
+}
+---
+
+<aside class="sidebar">
+  <a href="/" class="sidebar-logo" aria-label="Inicio">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--spotify-green)">
+      <circle cx="12" cy="12" r="12"/>
+    </svg>
+    <span class="logo-text">Adolfo Alvarez</span>
+  </a>
+
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      {navItems.map((item) => {
+        const isActive = currentPath === item.href ||
+          (item.href !== '/' && currentPath.startsWith(item.href));
+        return (
+          <li>
+            <a href={item.href} class:list={['nav-item', { active: isActive }]}>
+              <span class="nav-icon" aria-hidden="true" set:html={iconSvg(item.icon)}></span>
+              <span class="nav-label">{item.label}</span>
+              {isActive && <span class="nav-indicator" aria-hidden="true"></span>}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </nav>
+
+  <div class="sidebar-spacer"></div>
+
+  <div class="sidebar-section">
+    <p class="sidebar-heading">En reproducción</p>
+    <div class="sidebar-playing">
+      <div class="mini-album">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="mini-album-svg">
+          <rect width="40" height="40" rx="4" fill="url(#sm)"/>
+          <defs><linearGradient id="sm" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#1ed760"/><stop offset="100%" stop-color="#0d5c2e"/></linearGradient></defs>
+          <g fill="#fff" opacity="0.2"><circle cx="10" cy="10" r="2.5"/><circle cx="20" cy="20" r="3.5"/><circle cx="30" cy="8" r="2"/></g>
+        </svg>
+      </div>
+      <div class="mini-info">
+        <span class="mini-title">Backend Engineer</span>
+        <span class="mini-artist">Mérida, Yucatán</span>
+      </div>
+      <div class="mini-eq">
+        <span class="meq-bar"></span><span class="meq-bar"></span><span class="meq-bar"></span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .sidebar {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    height: calc(100vh - var(--player-height));
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-lg) var(--space-sm);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    overflow-y: auto;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    text-decoration: none;
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-lg);
+    transition: opacity 0.2s ease;
+  }
+
+  .sidebar-logo:hover { opacity: 0.8; }
+
+  .logo-text {
+    font: var(--text-heading);
+    color: var(--spotify-text-primary);
+    letter-spacing: -0.3px;
+  }
+
+  .sidebar-nav { margin-bottom: var(--space-lg); }
+
+  .nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--spotify-text-secondary);
+    font: var(--text-link);
+    transition: color 0.2s ease, background 0.2s ease;
+    position: relative;
+  }
+
+  .nav-item:hover {
+    color: var(--spotify-text-primary);
+    background: rgba(255,255,255,0.04);
+  }
+
+  .nav-item.active {
+    color: var(--spotify-text-primary);
+    background: var(--spotify-highlight);
+  }
+
+  .nav-indicator {
+    position: absolute;
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 18px;
+    background: var(--spotify-green);
+    border-radius: 0 2px 2px 0;
+    animation: indicatorIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes indicatorIn {
+    from { transform: translateY(-50%) scaleY(0); }
+    to { transform: translateY(-50%) scaleY(1); }
+  }
+
+  .nav-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease, color 0.2s ease;
+    color: currentColor;
+  }
+
+  .nav-icon :global(svg) {
+    display: block;
+  }
+
+  .nav-item:hover .nav-icon { transform: scale(1.15); }
+
+  .sidebar-spacer { flex: 1; }
+
+  .sidebar-heading {
+    font: var(--text-caption);
+    color: var(--spotify-text-subdued);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0 var(--space-md);
+    margin-bottom: var(--space-md);
+  }
+
+  .sidebar-playing {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    cursor: default;
+    transition: background 0.2s ease;
+  }
+
+  .sidebar-playing:hover { background: rgba(255,255,255,0.04); }
+
+  .mini-album {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    overflow: hidden;
+  }
+
+  .mini-album-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .sidebar-playing:hover .mini-album { transform: scale(1.05); }
+
+  .mini-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .mini-title {
+    font: var(--text-body-sm);
+    color: var(--spotify-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mini-artist {
+    font: var(--text-body-xs);
+    color: var(--spotify-text-subdued);
+  }
+
+  /* ── Now-playing equalizer in sidebar ─────────────────────────── */
+  .mini-eq {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 16px;
+  }
+
+  .meq-bar {
+    width: 3px;
+    background: var(--spotify-green);
+    border-radius: 2px;
+    animation: meqBounce 1s ease-in-out infinite;
+  }
+
+  .meq-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+  .meq-bar:nth-child(2) { height: 14px; animation-delay: 0.2s; }
+  .meq-bar:nth-child(3) { height: 6px; animation-delay: 0.1s; }
+
+  @keyframes meqBounce {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.3); }
+  }
+</style>

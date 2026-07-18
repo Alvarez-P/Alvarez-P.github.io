@@ -1,212 +1,214 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import SpotifyLayout from '../layouts/SpotifyLayout.astro';
 ---
 
-<BaseLayout title="contacto · backend engineer · portfolio">
+<SpotifyLayout title="Contacto · Adolfo Alvarez" playerTitle="Contacto">
   <article class="contact-page">
     <header class="contact-header">
-      <h1 class="contact-title">
-        <span class="prompt">$</span> cat <span class="arg">~/contact.md</span>
-      </h1>
-      <p class="contact-subtitle">
-        Prefiero mensajes directos y concretos. Cuéntame el contexto, no solo el "hola".
-      </p>
+      <h1 class="contact-title">Contacto</h1>
+      <p class="contact-subtitle">Disponible para colaborar. Respondo en menos de 24h.</p>
     </header>
 
-    <section class="contact-links">
-      <a href="https://github.com/gentleman-programming" class="contact-card" rel="noopener noreferrer">
-        <span class="contact-card-icon" aria-hidden="true">&gt;_</span>
-        <div class="contact-card-body">
-          <span class="contact-card-label">GitHub</span>
-          <span class="contact-card-value">@gentleman-programming</span>
+    <div class="contact-cards">
+      <a href="https://github.com/Alvarez-P" class="contact-card" rel="noopener noreferrer">
+        <div class="cc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
         </div>
-        <span class="contact-card-arrow" aria-hidden="true">→</span>
+        <div class="cc-body">
+          <span class="cc-label">GitHub</span>
+          <span class="cc-value">@Alvarez-P</span>
+        </div>
+        <span class="cc-arrow">→</span>
       </a>
 
-      <a href="https://linkedin.com/in/gentleman-programming" class="contact-card" rel="noopener noreferrer">
-        <span class="contact-card-icon" aria-hidden="true">[in]</span>
-        <div class="contact-card-body">
-          <span class="contact-card-label">LinkedIn</span>
-          <span class="contact-card-value">/in/gentleman-programming</span>
+      <a href="https://www.linkedin.com/in/adolfo-esteban-%C3%A1lvarez-pacheco-6b3a21192/" class="contact-card" rel="noopener noreferrer">
+        <div class="cc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="16" rx="2"/><circle cx="8" cy="11" r="2"/><path d="M8 15v3"/><path d="M12 11v7"/><path d="M16 9v9"/></svg>
         </div>
-        <span class="contact-card-arrow" aria-hidden="true">→</span>
+        <div class="cc-body">
+          <span class="cc-label">LinkedIn</span>
+          <span class="cc-value">Adolfo Esteban Alvarez Pacheco</span>
+        </div>
+        <span class="cc-arrow">→</span>
       </a>
 
-      <a href="mailto:hello@gentlemanprogramming.com" class="contact-card">
-        <span class="contact-card-icon" aria-hidden="true">@</span>
-        <div class="contact-card-body">
-          <span class="contact-card-label">Email</span>
-          <span class="contact-card-value">hello@gentlemanprogramming.com</span>
+      <a href="mailto:alvarez.p.esteban@gmail.com" class="contact-card">
+        <div class="cc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg>
         </div>
-        <span class="contact-card-arrow" aria-hidden="true">→</span>
+        <div class="cc-body">
+          <span class="cc-label">Email</span>
+          <span class="cc-value">alvarez.p.esteban@gmail.com</span>
+        </div>
+        <span class="cc-arrow">→</span>
       </a>
-    </section>
+    </div>
 
-    <section class="contact-note">
-      <div class="note-terminal">
-        <span class="note-prompt">$</span>
-        <span class="note-text">./disponibilidad</span>
+    <section class="availability">
+      <h2 class="avail-title">Disponibilidad</h2>
+      <div class="avail-card">
+        <div class="avail-row">
+          <span class="avail-key">Estado</span>
+          <span class="avail-val avail-live"><span class="live-dot"></span>Disponible</span>
+        </div>
+        <div class="avail-row">
+          <span class="avail-key">Modalidad</span>
+          <span class="avail-val">Remoto · Mérida, Yucatán, México</span>
+        </div>
+        <div class="avail-row">
+          <span class="avail-key">Zona horaria</span>
+          <span class="avail-val">GMT-6 (América)</span>
+        </div>
       </div>
-      <pre class="note-output">&#123;
-  "status":     "disponible",
-  "modalidad":  "remoto · latam · españa",
-  "horario":    "zona horaria: América (GMT-6)",
-  "prefieres":  "email &#62; LinkedIn &#62; GitHub Issues",
-  "respuesta":  "&#60; 24h"
-&#125;</pre>
     </section>
   </article>
-</BaseLayout>
+</SpotifyLayout>
 
 <style>
   .contact-page {
-    max-width: var(--content-max-width);
+    max-width: 600px;
+    padding: var(--space-3xl);
     margin: 0 auto;
-    padding: var(--space-lg) var(--content-padding) var(--space-xl);
+    animation: pageIn 0.5s ease-out;
+  }
+
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(16px); }
   }
 
   .contact-header {
-    margin-bottom: var(--space-xl);
+    padding-top: var(--space-4xl);
+    margin-bottom: var(--space-3xl);
   }
 
   .contact-title {
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-normal);
-    color: var(--color-text-primary);
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-md);
-  }
-
-  .contact-title .prompt {
-    color: var(--color-text-accent);
-  }
-
-  .contact-title .arg {
-    color: var(--color-terminal-cyan);
+    font: var(--text-display-lg);
+    color: var(--spotify-text-primary);
+    margin-bottom: var(--space-sm);
   }
 
   .contact-subtitle {
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    line-height: var(--line-height-relaxed);
-    padding-left: calc(1.5ch + var(--space-sm));
+    font: var(--text-body);
+    color: var(--spotify-text-subdued);
   }
 
-  /* Contact Cards */
-  .contact-links {
+  /* ── Contact cards ────────────────────────────────────────────── */
+  .contact-cards {
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-4xl);
   }
 
   .contact-card {
     display: flex;
     align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-md);
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    background: rgba(255,255,255,0.03);
+    border-radius: var(--radius-md);
     text-decoration: none;
-    transition: border-color var(--transition-fast), background-color var(--transition-fast);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   }
 
   .contact-card:hover {
-    border-color: var(--color-border-accent);
-    background-color: var(--color-bg-tertiary);
+    background: rgba(255,255,255,0.06);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
   }
 
-  .contact-card:hover .contact-card-arrow {
-    transform: translateX(4px);
-  }
-
-  .contact-card-icon {
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-lg);
-    color: var(--color-text-accent);
+  .cc-icon {
     width: 40px;
-    text-align: center;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    color: var(--spotify-text-subdued);
+    transition: color 0.2s ease;
   }
 
-  .contact-card-body {
+  .contact-card:hover .cc-icon { color: var(--spotify-green); }
+
+  .cc-body {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 2px;
   }
 
-  .contact-card-label {
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
+  .cc-label {
+    font: var(--text-caption);
+    color: var(--spotify-text-subdued);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
   }
 
-  .contact-card-value {
-    font-size: var(--font-size-base);
-    color: var(--color-text-primary);
+  .cc-value {
+    font: var(--text-body);
+    color: var(--spotify-text-primary);
   }
 
-  .contact-card-arrow {
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-lg);
-    color: var(--color-text-muted);
+  .cc-arrow {
+    font: var(--text-body);
+    color: var(--spotify-text-subdued);
     transition: transform var(--transition-fast);
   }
 
-  .contact-card:hover .contact-card-arrow {
-    color: var(--color-text-accent);
+  .contact-card:hover .cc-arrow {
+    transform: translateX(4px);
+    color: var(--spotify-green);
   }
 
-  /* Availability Note */
-  .contact-note {
-    margin-top: var(--space-lg);
+  /* ── Availability ─────────────────────────────────────────────── */
+  .avail-title {
+    font: var(--text-heading);
+    color: var(--spotify-text-primary);
+    margin-bottom: var(--space-lg);
   }
 
-  .note-terminal {
+  .avail-card {
+    background: rgba(255,255,255,0.03);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
     display: flex;
-    align-items: baseline;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .avail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .avail-key {
+    font: var(--text-body-sm);
+    color: var(--spotify-text-subdued);
+  }
+
+  .avail-val {
+    font: var(--text-body-sm);
+    color: var(--spotify-text-primary);
+  }
+
+  .avail-live {
+    display: flex;
+    align-items: center;
     gap: var(--space-sm);
-    margin-bottom: var(--space-sm);
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-sm);
+    color: var(--spotify-green);
   }
 
-  .note-prompt {
-    color: var(--color-text-accent);
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--spotify-green);
+    animation: pulse 2s ease-in-out infinite;
   }
 
-  .note-text {
-    color: var(--color-text-primary);
-  }
-
-  .note-output {
-    margin: 0;
-    padding: var(--space-md);
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    font-family: var(--font-mono-stack);
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-relaxed);
-    color: var(--color-text-primary);
-    overflow-x: auto;
-  }
-
-  @media (max-width: 640px) {
-    .contact-card {
-      flex-wrap: wrap;
-    }
-
-    .note-output {
-      font-size: var(--font-size-xs);
-    }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
   }
 </style>
