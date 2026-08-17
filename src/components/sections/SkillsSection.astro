@@ -1,0 +1,21 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import AsteroidBelt from './AsteroidBelt.astro';
+import SkillsTabs from './SkillsTabs.tsx';
+---
+
+<section id="skills" class="scroll-mt-16 py-24">
+  <SectionHeader
+    eyebrow="Skills"
+    title="Stack tecnológico"
+    description="Tecnologías y herramientas con las que diseño, construyo y opero sistemas, organizadas por dominio."
+  />
+
+  <div class="mt-10" data-reveal>
+    <AsteroidBelt />
+  </div>
+
+  <div class="mt-20" data-reveal data-reveal-delay="80">
+    <SkillsTabs client:visible />
+  </div>
+</section>

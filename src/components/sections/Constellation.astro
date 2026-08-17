@@ -1,0 +1,151 @@
+---
+// Constellation signature — a quiet Orion inspired by the user's career path.
+// Pure SVG + CSS. Lines draw themselves on load; stars fade in low-opacity.
+// 5 nodes map to projects (adc, belieff, derby, happyguest, infotec).
+
+interface Node {
+  id: string;
+  x: number;
+  y: number;
+  r: number;
+  project?: string;
+}
+
+const nodes: Node[] = [
+  { id: 'head', x: 160, y: 60, r: 1.4 },
+  { id: 'adc', x: 60, y: 135, r: 2.4, project: 'ADC — Consultoría y Capacitación' },
+  { id: 'beli', x: 262, y: 112, r: 2.4, project: 'Belieff — Recursos Humanos' },
+  { id: 'happy', x: 112, y: 238, r: 2.4, project: 'HappyGuest — Hotelería' },
+  { id: 'info', x: 160, y: 216, r: 3, project: 'Infotec — CFE TEIT / Internet para Todos' },
+  { id: 'derby', x: 208, y: 194, r: 2.4, project: 'Derby Technologies — Logística' },
+  { id: 'rigel', x: 92, y: 372, r: 1.6 },
+  { id: 'saiph', x: 236, y: 352, r: 1.6 },
+];
+
+// [fromId, toId]
+const edges: Array<[string, string]> = [
+  ['head', 'adc'],
+  ['head', 'beli'],
+  ['adc', 'happy'],
+  ['beli', 'derby'],
+  ['happy', 'info'],
+  ['info', 'derby'],
+  ['happy', 'rigel'],
+  ['derby', 'saiph'],
+  ['rigel', 'saiph'],
+];
+
+const byId = new Map(nodes.map((n) => [n.id, n]));
+const points = (id: string) => byId.get(id)!;
+---
+
+<div class="constellation" role="img" aria-label="Constelación de Orión — trayectoria profesional">
+  <svg viewBox="0 0 320 440" fill="none" aria-hidden="true">
+    {edges.map(([a, b], i) => {
+      const A = points(a);
+      const B = points(b);
+      return (
+        <line
+          class="constellation-line"
+          x1={A.x}
+          y1={A.y}
+          x2={B.x}
+          y2={B.y}
+          pathLength="1"
+          style={`animation-delay: ${(i * 0.18).toFixed(2)}s;`}
+        />
+      );
+    })}
+
+    {nodes.map((n, i) => (
+      <circle
+        class={`constellation-star${n.project ? ' constellation-star--project' : ''}`}
+        cx={n.x}
+        cy={n.y}
+        r={n.r}
+        style={`animation-delay: ${(0.5 + i * 0.14).toFixed(2)}s;`}
+      >
+        {n.project && <title>{n.project}</title>}
+      </circle>
+    ))}
+  </svg>
+</div>
+
+<style>
+  .constellation {
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    width: min(40vw, 340px);
+    transform: translateY(-52%);
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .constellation svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .constellation-line {
+    stroke: var(--blueshift);
+    stroke-width: 0.7;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0.55;
+    animation: constellation-draw 2.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .constellation-star {
+    fill: var(--foreground);
+    opacity: 0;
+    animation: constellation-fade 1.6s ease-out forwards;
+  }
+
+  .constellation-star--project {
+    fill: var(--blueshift);
+    pointer-events: auto;
+    cursor: default;
+    transition: fill 0.3s ease, opacity 0.3s ease;
+  }
+
+  .constellation-star--project:hover {
+    fill: var(--foreground);
+    opacity: 0.95;
+  }
+
+  @keyframes constellation-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes constellation-fade {
+    to {
+      opacity: 0.75;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .constellation {
+      right: -2rem;
+      width: min(70vw, 300px);
+      opacity: 0.35;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .constellation-line {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+
+    .constellation-star {
+      animation: none;
+      opacity: 0.75;
+    }
+  }
+</style>

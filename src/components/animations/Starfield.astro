@@ -1,0 +1,126 @@
+---
+// Subtle fixed starfield with gravitational-lens parallax toward the cursor.
+// Layers drift by a tiny factor (far < mid < near). Transform-only, rAF, no layout.
+// Respects prefers-reduced-motion (no JS runs; static starfield).
+
+// Deterministic PRNG so the build output is stable across runs.
+function mulberry32(seed: number) {
+  return function () {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+interface StarLayer {
+  name: string;
+  count: number;
+  speed: number;
+  minSize: number;
+  maxSize: number;
+  minOpacity: number;
+  maxOpacity: number;
+  seed: number;
+}
+
+const layers: StarLayer[] = [
+  { name: 'far', count: 26, speed: 3, minSize: 1, maxSize: 1.2, minOpacity: 0.15, maxOpacity: 0.4, seed: 11 },
+  { name: 'mid', count: 18, speed: 7, minSize: 1, maxSize: 1.6, minOpacity: 0.28, maxOpacity: 0.55, seed: 27 },
+  { name: 'near', count: 10, speed: 13, minSize: 1.2, maxSize: 1.9, minOpacity: 0.32, maxOpacity: 0.6, seed: 43 },
+];
+
+function layerBackground(layer: StarLayer): string {
+  const rand = mulberry32(layer.seed);
+  const stars: string[] = [];
+  for (let i = 0; i < layer.count; i++) {
+    const x = (rand() * 100).toFixed(1);
+    const y = (rand() * 100).toFixed(1);
+    const size = (layer.minSize + rand() * (layer.maxSize - layer.minSize)).toFixed(2);
+    const o = (layer.minOpacity + rand() * (layer.maxOpacity - layer.minOpacity)).toFixed(2);
+    stars.push(
+      `radial-gradient(${size}px ${size}px at ${x}% ${y}%, rgba(227, 230, 238, ${o}) 50%, transparent 50%)`,
+    );
+  }
+  return stars.join(', ');
+}
+
+const rendered = layers.map((l) => ({ ...l, background: layerBackground(l) }));
+---
+
+<div class="starfield" aria-hidden="true">
+  <div class="starfield__glow"></div>
+  {rendered.map((l) => (
+    <div class={`starfield__layer starfield__layer--${l.name}`} data-parallax={l.speed} style={`background: ${l.background};`}></div>
+  ))}
+</div>
+
+<style>
+  .starfield {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .starfield__glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      700px 450px at 50% -12%,
+      rgba(122, 143, 194, 0.06),
+      transparent 70%
+    );
+  }
+
+  .starfield__layer {
+    position: absolute;
+    inset: -80px; /* bleed room so parallax never reveals edges */
+    background-repeat: no-repeat;
+    will-change: transform;
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reduce) {
+    const layers = Array.from(
+      document.querySelectorAll<HTMLElement>('.starfield [data-parallax]'),
+    );
+
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let raf = 0;
+
+    const apply = () => {
+      for (const el of layers) {
+        const factor = parseFloat(el.dataset.parallax || '0');
+        el.style.transform = `translate3d(${(-currentX * factor).toFixed(2)}px, ${(-currentY * factor).toFixed(2)}px, 0)`;
+      }
+    };
+
+    const loop = () => {
+      currentX += (targetX - currentX) * 0.05;
+      currentY += (targetY - currentY) * 0.05;
+      apply();
+
+      if (Math.abs(targetX - currentX) > 0.001 || Math.abs(targetY - currentY) > 0.001) {
+        raf = requestAnimationFrame(loop);
+      } else {
+        raf = 0;
+      }
+    };
+
+    const onMove = (e: PointerEvent) => {
+      targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+      targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+      if (!raf) raf = requestAnimationFrame(loop);
+    };
+
+    window.addEventListener('pointermove', onMove, { passive: true });
+  }
+</script>

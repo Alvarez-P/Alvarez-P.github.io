@@ -1,0 +1,201 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const logos = [
+  { name: 'Node.js', slug: 'nodedotjs' },
+  { name: 'TypeScript', slug: 'typescript' },
+  { name: 'AWS', slug: 'amazonwebservices' },
+  { name: 'React', slug: 'react' },
+  { name: 'Next.js', slug: 'nextdotjs' },
+  { name: 'Docker', slug: 'docker' },
+  { name: 'PostgreSQL', slug: 'postgresql' },
+  { name: 'MongoDB', slug: 'mongodb' },
+  { name: 'NestJS', slug: 'nestjs' },
+  { name: 'Express', slug: 'express' },
+  { name: 'Python', slug: 'python' },
+  { name: 'GraphQL', slug: 'graphql' },
+  { name: 'Redis', slug: 'redis' },
+  { name: 'Kafka', slug: 'apachekafka' },
+  { name: 'Kubernetes', slug: 'kubernetes' },
+  { name: 'Terraform', slug: 'terraform' },
+  { name: 'Jest', slug: 'jest' },
+  { name: 'Prisma', slug: 'prisma' },
+  { name: 'Tailwind CSS', slug: 'tailwindcss' },
+  { name: 'GitHub Actions', slug: 'githubactions' },
+];
+
+const jitter = (seed: number) => {
+  const x = Math.sin(seed * 12.9898) * 43758.5453;
+  return x - Math.floor(x);
+};
+
+const shuffled = (arr: typeof logos, seed: number) => {
+  const a = [...arr];
+  let s = seed;
+  const rand = () => {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+
+const makeRow = (seedOffset: number, ordered: typeof logos) => {
+  return ordered.map((logo, i) => {
+    const y = Math.round((jitter(i * 3.7 + seedOffset) * 2 - 1) * 20);
+
+    const rot = Math.round((jitter(i * 5.3 + seedOffset) * 2 - 1) * 12);
+
+    const size = +(1.25 + Math.pow(jitter(i * 7.1 + seedOffset), 1.4) * 1.75).toFixed(2);
+
+    const spinDur = +(4 + jitter(i * 11.9 + seedOffset) * 5).toFixed(2);
+    const spinDelay = +(jitter(i * 13.7 + seedOffset) * 4).toFixed(2);
+    const spinRange = +(3 + jitter(i * 17.3 + seedOffset) * 7).toFixed(1);
+
+    return { ...logo, y, rot, size, spinDur, spinDelay, spinRange };
+  });
+};
+
+const rows = [makeRow(0, logos), makeRow(11.3, shuffled(logos, 42))];
+
+const dust = Array.from({ length: 18 }, (_, i) => {
+  const left = Math.round(jitter(i * 19.7) * 100);
+  const top = Math.round((jitter(i * 23.1) * 2 - 1) * 30);
+  const size = +(1 + jitter(i * 29.3) * 1.5).toFixed(1);
+  return { left, top, size };
+});
+---
+
+<div class="asteroid-belt" aria-hidden="true">
+  {rows.map((items) => (
+    <div class="asteroid-track">
+      {[0, 1, 2, 3].map(() => (
+        <ul class="asteroid-group">
+          {items.map((item) => (
+            <li
+              class="asteroid-item"
+              style={`--y: ${item.y}px; --rot: ${item.rot}deg; --spin-dur: ${item.spinDur}s; --spin-delay: ${item.spinDelay}s; --spin-range: ${item.spinRange}deg;`}
+            >
+              <Icon name={`simple-icons:${item.slug}`} size={`${item.size}rem`} />
+              <span class="sr-only">{item.name}</span>
+            </li>
+          ))}
+        </ul>
+      ))}
+    </div>
+  ))}
+
+  <div class="asteroid-dust" aria-hidden="true">
+    {dust.map((d) => (
+      <span style={`--dx: ${d.left}%; --dy: ${d.top}px; --ds: ${d.size}px;`} />
+    ))}
+  </div>
+</div>
+
+<style>
+  .asteroid-belt {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    overflow-x: clip;
+    padding: 1.5rem 0 0.75rem;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+  }
+
+  .asteroid-track {
+    display: flex;
+    width: max-content;
+    height: 3rem;
+    animation: asteroid-marquee 60s linear infinite;
+    will-change: transform;
+  }
+
+  .asteroid-track + .asteroid-track {
+    margin-top: -0.75rem;
+  }
+
+  .asteroid-group {
+    display: flex;
+    align-items: center;
+    gap: 2.25rem;
+    padding: 0 2.25rem 0 0;
+    margin: 0;
+    list-style: none;
+    flex-shrink: 0;
+  }
+
+  .asteroid-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #c9d1e0;
+    transform: translateY(var(--y, 0px)) rotate(var(--rot, 0deg));
+    animation: asteroid-tumble var(--spin-dur, 6s) ease-in-out var(--spin-delay, 0s) infinite alternate;
+    will-change: transform;
+  }
+
+  .asteroid-dust {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .asteroid-dust span {
+    position: absolute;
+    left: var(--dx, 0%);
+    top: calc(50% + var(--dy, 0px));
+    width: var(--ds, 2px);
+    height: var(--ds, 2px);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  @keyframes asteroid-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-25%);
+    }
+  }
+
+  @keyframes asteroid-tumble {
+    from {
+      transform: translateY(var(--y, 0px)) rotate(calc(var(--rot, 0deg) - var(--spin-range, 6deg)));
+    }
+    to {
+      transform: translateY(var(--y, 0px)) rotate(calc(var(--rot, 0deg) + var(--spin-range, 6deg)));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .asteroid-track {
+      animation: none;
+      width: 100%;
+      justify-content: center;
+    }
+    .asteroid-item {
+      animation: none;
+    }
+    .asteroid-group:not(:first-child) {
+      display: none;
+    }
+  }
+</style>

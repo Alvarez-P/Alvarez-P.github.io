@@ -1,421 +1,321 @@
 ---
-import SpotifyLayout from '../layouts/SpotifyLayout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/layout/Nav.astro';
+import Starfield from '../components/animations/Starfield.astro';
+import Constellation from '../components/sections/Constellation.astro';
+import SectionHeader from '../components/sections/SectionHeader.astro';
+import Comet from '../components/sections/Comet.astro';
+import SkillsSection from '../components/sections/SkillsSection.astro';
+import ExperienceStack from '../components/sections/ExperienceStack';
+import SplitText from '../components/animations/SplitText';
+import { MorphingText } from '../components/animations/MorphingText';
+import SocialAvatars from '../components/animations/social-avatars';
+import MagicBento from '../components/animations/MagicBento';
+import { getCollection } from 'astro:content';
+import { buttonVariants } from '@/components/animations/button-styled';
+import { Badge } from '@/components/ui/badge';
+import { site } from '../data/site';
+import { languages } from '../data/skills';
+
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.published !== false)
+  .sort((a, b) => {
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+    const orderA = a.data.order ?? Number.MAX_SAFE_INTEGER;
+    const orderB = b.data.order ?? Number.MAX_SAFE_INTEGER;
+    if (orderA !== orderB) return orderA - orderB;
+    return b.data.period.start.getTime() - a.data.period.start.getTime();
+  });
+
+function formatPeriod(p: { start: Date; end?: Date }) {
+  const start = p.start.getUTCFullYear();
+  if (!p.end) return `${start} — Actualidad`;
+  const end = p.end.getUTCFullYear();
+  return start === end ? `${start}` : `${start} — ${end}`;
+}
+
+const especialidades = [
+  'arquitecturas backend escalables',
+  'REST / GraphQL / WebSockets',
+  'microservicios',
+  'Clean Architecture',
+  'DDD',
+  'SOLID',
+  'serverless',
+  'IaC (AWS CDK)',
+  'optimización de rendimiento',
+  'mentoría técnica',
+  'code reviews',
+  'AI-assisted development',
+];
 ---
 
-<SpotifyLayout title="Adolfo Alvarez · Backend Engineer" playerTitle="Perfil">
-  <article class="artist-page">
-    <header class="artist-header">
-      <div class="artist-avatar">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="avatar-svg">
-          <defs><linearGradient id="av-grad" x1="0" y1="0" x2="200" y2="200"><stop offset="0%" stop-color="#1ed760"/><stop offset="100%" stop-color="#0d5c2e"/></linearGradient></defs>
-          <rect width="200" height="200" fill="url(#av-grad)"/>
-          <g fill="#fff" opacity="0.12">
-            <circle cx="100" cy="55" r="48"/>
-            <circle cx="100" cy="175" r="65"/>
-          </g>
-          <g stroke="#fff" stroke-width="0.6" opacity="0.15">
-            <line x1="100" y1="103" x2="100" y2="175"/>
-            <line x1="65" y1="130" x2="135" y2="130"/>
-          </g>
-          <g fill="none" stroke="#fff" stroke-width="0.5" opacity="0.1">
-            <circle cx="100" cy="100" r="90"/><circle cx="100" cy="100" r="70"/><circle cx="100" cy="100" r="50"/>
-          </g>
-          <g fill="#fff" opacity="0.2">
-            <circle cx="60" cy="45" r="2"/><circle cx="140" cy="45" r="2"/>
-            <circle cx="100" cy="25" r="2.5"/><circle cx="75" cy="65" r="1.5"/><circle cx="125" cy="65" r="1.5"/>
-          </g>
-        </svg>
-      </div>
-      <div class="artist-meta">
-        <p class="artist-verified">✅ Ingeniero verificado</p>
-        <h1 class="artist-name">Adolfo Esteban Alvarez Pacheco</h1>
-        <p class="artist-listeners">6+ años de experiencia · Mérida, Yucatán, México</p>
-      </div>
-    </header>
+<BaseLayout title={`${site.name} · ${site.role}`}>
+  <Starfield />
+  <Nav />
 
-    <div class="artist-actions">
-      <button class="btn-play" id="hero-play" aria-label="Reproducir">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      </button>
-      <button class="btn-follow" id="btn-follow">Seguir</button>
-      <button class="btn-more" aria-label="Más opciones">···</button>
-    </div>
+  <main class="mx-auto max-w-5xl px-5">
+    <section id="hero" class="relative flex min-h-screen flex-col justify-center py-24">
+      <Constellation />
 
-    <section class="section">
-      <h2 class="section-title">Popular</h2>
-      <div class="track-list">
-        {[
-          { num: 1, name: 'Node.js & TypeScript', plays: 'Stack principal' },
-          { num: 2, name: 'AWS Serverless', plays: 'Lambda, API GW, DynamoDB, SQS' },
-          { num: 3, name: 'NestJS & Express', plays: 'Frameworks backend' },
-          { num: 4, name: 'Domain-Driven Design', plays: 'Arquitectura de software' },
-          { num: 5, name: 'PostgreSQL & Redis', plays: 'Bases de datos' },
-        ].map((track, i) => (
-          <div class="track-row" style={`--delay: ${i * 60}ms`}>
-            <span class="track-num">
-              <span class="track-num-text">{track.num}</span>
-              <span class="track-play-icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-              </span>
-              <span class="track-eq">
-                <span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span>
-              </span>
-            </span>
-            <div class="track-info">
-              <span class="track-name">{track.name}</span>
-              <span class="track-plays">{track.plays}</span>
-            </div>
-            <span class="track-time">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8z"/><path d="M8 3.25a.75.75 0 01.75.75v3.69l2.28 2.28a.75.75 0 11-1.06 1.06l-2.5-2.5A.75.75 0 017.25 8V4A.75.75 0 018 3.25z"/></svg>
-            </span>
-          </div>
-        ))}
+      <div class="space-y-6">
+        <p class="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
+          <span class="text-muted-foreground/70">{site.location}</span>
+          <span class="mx-2" aria-hidden="true">·</span>
+          <MorphingText
+            client:load
+            text={['Senior Software Engineer', 'Backend', 'Cloud', 'System Design']}
+            loop
+          />
+        </p>
+
+        <SplitText
+          client:load
+          tag="h1"
+          text={site.name}
+          splitType="words"
+          textAlign="left"
+          delay={140}
+          className="max-w-3xl text-5xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-6xl"
+        />
+
+        <p class="font-mono text-sm uppercase tracking-[0.2em] text-primary">
+          {site.role}
+        </p>
+
+        <p class="max-w-xl text-lg text-muted-foreground">
+          {site.tagline}. Diseño soluciones escalables antes de escribir código,
+          con arquitecturas simples y mantenibles.
+        </p>
+
+        <div class="flex flex-wrap gap-3 pt-2">
+          <a href="#proyectos" class={buttonVariants()}>Ver proyectos</a>
+          <a href="#contacto" class={buttonVariants({ variant: 'outline' })}>Contacto</a>
+        </div>
+
+        <div class="pt-10">
+          <SocialAvatars client:load />
+        </div>
       </div>
     </section>
 
-    <div class="artist-cta">
-      <a href="/experiencia" class="btn-primary">Ver experiencia completa</a>
-      <a href="/contact" class="btn-outline">Contacto</a>
+    <section id="sobre-mi" class="relative scroll-mt-16 py-24">
+      <Comet />
+      <SectionHeader
+        eyebrow="Sobre mí"
+        title="Quién soy"
+        description="Perfil, especialidades y forma de trabajar."
+      />
+
+      <div class="mt-10 grid gap-8 md:grid-cols-[1.35fr_1fr]" data-reveal>
+        <div class="space-y-6">
+          <p class="text-base leading-relaxed text-muted-foreground">
+            Senior Software Engineer con más de 6 años en backend con Node.js,
+            TypeScript y AWS. He trabajado en telecomunicaciones, hotelería,
+            RRHH, logística y servicios públicos, llevando productos de cero a
+            producción.
+          </p>
+
+          <div class="grid gap-3 sm:grid-cols-3">
+            <div class="group rounded-xl border border-border/60 bg-card/40 p-4 transition-colors duration-300 hover:border-primary/40">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="size-5 text-primary transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(122,143,194,0.7)]" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" />
+                <circle cx="12" cy="12" r="4.5" />
+                <circle cx="12" cy="12" r="0.5" />
+              </svg>
+              <p class="mt-3 text-sm font-medium text-foreground">El negocio primero</p>
+              <p class="mt-1 text-xs leading-relaxed text-muted-foreground">Entender el problema antes de implementar.</p>
+            </div>
+
+            <div class="group rounded-xl border border-border/60 bg-card/40 p-4 transition-colors duration-300 hover:border-primary/40">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-primary transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(122,143,194,0.7)]" aria-hidden="true">
+                <path d="M12 3 3 8l9 5 9-5-9-5Z" />
+                <path d="M3 12l9 5 9-5" />
+                <path d="M3 16l9 5 9-5" />
+              </svg>
+              <p class="mt-3 text-sm font-medium text-foreground">Arquitectura honesta</p>
+              <p class="mt-1 text-xs leading-relaxed text-muted-foreground">Simple, escalable y mantenible.</p>
+            </div>
+
+            <div class="group rounded-xl border border-border/60 bg-card/40 p-4 transition-colors duration-300 hover:border-primary/40">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-primary transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(122,143,194,0.7)]" aria-hidden="true">
+                <path d="M12 3v3" />
+                <path d="M12 18v3" />
+                <path d="M3 12h3" />
+                <path d="M18 12h3" />
+                <path d="m5.6 5.6 2.1 2.1" />
+                <path d="m16.3 16.3 2.1 2.1" />
+                <path d="m5.6 18.4 2.1-2.1" />
+                <path d="m16.3 7.7 2.1-2.1" />
+              </svg>
+              <p class="mt-3 text-sm font-medium text-foreground">IA con criterio</p>
+              <p class="mt-1 text-xs leading-relaxed text-muted-foreground">Una herramienta, no un sustituto del juicio.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-border/60 bg-card/40">
+          <dl class="divide-y divide-border/60 text-sm">
+            <div class="flex items-baseline justify-between gap-4 px-5 py-2.5">
+              <dt class="text-muted-foreground">Ubicación</dt>
+              <dd class="text-right text-foreground">{site.location}</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4 px-5 py-2.5">
+              <dt class="text-muted-foreground">Experiencia</dt>
+              <dd class="text-right text-foreground">6+ años</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4 px-5 py-2.5">
+              <dt class="text-muted-foreground">Enfoque</dt>
+              <dd class="text-right text-foreground">Backend · Cloud · AI-assisted</dd>
+            </div>
+            <div class="px-5 py-2.5">
+              <dt class="text-muted-foreground">Educación</dt>
+              <dd class="mt-1.5 space-y-1.5">
+                <div class="text-foreground">
+                  Instituto Tecnológico de Mérida
+                  <span class="block text-xs text-muted-foreground">Ing. Sistemas Computacionales · 2017–2021</span>
+                </div>
+                <div class="text-foreground">
+                  Conalep Mérida I
+                  <span class="block text-xs text-muted-foreground">Prof. Técnico Bachiller en Informática · 2014–2017</span>
+                </div>
+              </dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4 px-5 py-2.5">
+              <dt class="text-muted-foreground">Idiomas</dt>
+              <dd class="text-right text-foreground">Español nativo · Inglés intermedio</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="mt-8" data-reveal data-reveal-delay="80">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Especialidades</p>
+        <div class="mt-3 flex flex-wrap gap-1.5">
+          {especialidades.map((e) => (
+            <Badge variant="outline">{e}</Badge>
+          ))}
+        </div>
+      </div>
+
+      <div class="mt-8" data-reveal data-reveal-delay="120">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Lenguajes</p>
+        <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+          {languages.map((l, i) => (
+            <Fragment>
+              {i > 0 && <span class="text-border" aria-hidden="true"> · </span>}
+              {l.learning ? (
+                <span class="text-[color:var(--redshift)]">{l.name} <span class="text-[color:var(--redshift)]/60">(aprendizaje)</span></span>
+              ) : (
+                <span class="text-foreground/80">{l.name}</span>
+              )}
+            </Fragment>
+          ))}
+        </p>
+      </div>
+    </section>
+
+    <section id="experiencia" class="scroll-mt-16 py-24">
+      <SectionHeader
+        eyebrow="Experiencia"
+        title="Trayectoria"
+        description="Carrera profesional, roles y responsabilidades."
+      />
+
+      <div class="mt-12">
+        <ExperienceStack
+          client:load
+          projects={projects.map((p) => ({
+            role: p.data.role,
+            company: p.data.company,
+            period: formatPeriod(p.data.period),
+            description: p.data.description,
+            techStack: p.data.techStack,
+          }))}
+        />
+      </div>
+    </section>
+
+    <SkillsSection />
+
+    <section id="proyectos" class="scroll-mt-16 py-24">
+      <SectionHeader
+        eyebrow="Proyectos"
+        title="Casos de estudio"
+        description="Proyectos destacados con métricas e impacto."
+      />
+
+      <div class="mt-10" data-reveal>
+        <MagicBento
+          client:load
+          items={projects.map((p) => ({
+            title: p.data.title,
+            company: p.data.company,
+            role: p.data.role,
+            period: formatPeriod(p.data.period),
+            description: p.data.description,
+            techStack: p.data.techStack,
+            metrics: p.data.metrics,
+            featured: p.data.featured,
+          }))}
+        />
+      </div>
+    </section>
+
+    <section id="contacto" class="scroll-mt-16 py-24">
+      <SectionHeader
+        eyebrow="Contacto"
+        title="Hablemos"
+        description="Disponible para colaborar. Respondo en menos de 24 horas."
+      />
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal>
+        <a href={site.social.github} target="_blank" rel="noopener noreferrer"
+          class="group flex flex-col gap-3 rounded-xl border border-border/60 bg-card/40 p-5 transition-colors duration-300 hover:border-foreground/40">
+          <span class="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">GitHub</span>
+          <span class="text-sm text-foreground">@Alvarez-P</span>
+          <span class="text-sm text-muted-foreground transition-transform duration-200 group-hover:translate-x-1">→</span>
+        </a>
+
+        <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer"
+          class="group flex flex-col gap-3 rounded-xl border border-border/60 bg-card/40 p-5 transition-colors duration-300 hover:border-foreground/40">
+          <span class="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">LinkedIn</span>
+          <span class="text-sm text-foreground">Adolfo Esteban Alvarez Pacheco</span>
+          <span class="text-sm text-muted-foreground transition-transform duration-200 group-hover:translate-x-1">→</span>
+        </a>
+
+        <a href={`mailto:${site.email}`}
+          class="group flex flex-col gap-3 rounded-xl border border-border/60 bg-card/40 p-5 transition-colors duration-300 hover:border-foreground/40">
+          <span class="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Email</span>
+          <span class="break-all text-sm text-foreground">{site.email}</span>
+          <span class="text-sm text-muted-foreground transition-transform duration-200 group-hover:translate-x-1">→</span>
+        </a>
+
+        <a href={`tel:${site.phone.replace(/\s/g, '')}`}
+          class="group flex flex-col gap-3 rounded-xl border border-border/60 bg-card/40 p-5 transition-colors duration-300 hover:border-foreground/40">
+          <span class="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Teléfono</span>
+          <span class="text-sm text-foreground">{site.phone}</span>
+          <span class="text-sm text-muted-foreground transition-transform duration-200 group-hover:translate-x-1">→</span>
+        </a>
+      </div>
+
+      <div class="mt-8 rounded-xl border border-border/60 bg-card/40 p-5" data-reveal data-reveal-delay="80">
+        <div class="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex items-center gap-2">
+            <span class="size-2 rounded-full bg-foreground" aria-hidden="true"></span>
+            <span class="text-foreground">Disponible</span>
+          </div>
+          <span class="text-muted-foreground">Remoto · {site.location}</span>
+          <span class="text-muted-foreground">GMT-6 (América)</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-border/60">
+    <div class="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-5 py-8 text-sm text-muted-foreground sm:flex-row">
+      <p>© {new Date().getFullYear()} {site.name}</p>
+      <p class="font-mono text-xs">Astro · shadcn/ui · tema espacial</p>
     </div>
-  </article>
-</SpotifyLayout>
-
-<style>
-  .artist-page {
-    max-width: 900px;
-    padding: var(--space-3xl);
-    margin: 0 auto;
-    animation: pageIn 0.6s ease-out;
-  }
-
-  @keyframes pageIn {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .artist-header {
-    display: flex;
-    align-items: flex-end;
-    gap: var(--space-2xl);
-    margin-bottom: var(--space-2xl);
-    padding-top: var(--space-5xl);
-  }
-
-  .artist-avatar {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    transition: transform 0.5s ease, box-shadow 0.5s ease;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(30, 215, 96, 0.2), 0 0 60px rgba(30, 215, 96, 0.05), 0 0 0 8px rgba(30, 215, 96, 0.06);
-  }
-
-  .avatar-svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  .artist-avatar::after {
-    content: '';
-    position: absolute;
-    inset: -12px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(30,215,96,0.15) 0%, transparent 70%);
-    z-index: -1;
-    transition: opacity 0.5s ease;
-    opacity: 0.6;
-  }
-
-  .artist-avatar:hover::after {
-    opacity: 1;
-  }
-
-  .artist-avatar:hover {
-    transform: scale(1.03);
-    box-shadow: 0 12px 40px rgba(30, 215, 96, 0.3), 0 0 80px rgba(30, 215, 96, 0.1), 0 0 0 12px rgba(30, 215, 96, 0.08);
-  }
-
-  .artist-meta { display: flex; flex-direction: column; gap: var(--space-sm); padding-bottom: var(--space-xs); }
-
-  .artist-verified {
-    font: var(--text-body-sm);
-    color: var(--spotify-text-secondary);
-    display: flex;
-    align-items: center;
-    gap: var(--space-xs);
-  }
-
-  .artist-name {
-    font: var(--text-display-xl);
-    color: var(--spotify-text-primary);
-    letter-spacing: -1.5px;
-  }
-
-  .artist-listeners {
-    font: var(--text-body);
-    color: var(--spotify-text-secondary);
-  }
-
-  /* ── Actions ──────────────────────────────────────────────────── */
-  .artist-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--space-xl);
-    margin-bottom: var(--space-4xl);
-  }
-
-  .btn-play {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: var(--spotify-green);
-    color: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 4px 16px rgba(30, 215, 96, 0.3);
-  }
-
-  .btn-play:hover {
-    transform: scale(1.08);
-    background: var(--spotify-green-hover);
-    box-shadow: 0 6px 24px rgba(30, 215, 96, 0.4);
-  }
-
-  .btn-play:active {
-    transform: scale(0.96);
-  }
-
-  .btn-play.playing {
-    animation: playPulse 2s ease-in-out infinite;
-  }
-
-  @keyframes playPulse {
-    0%, 100% { box-shadow: 0 4px 16px rgba(30, 215, 96, 0.3); }
-    50% { box-shadow: 0 4px 28px rgba(30, 215, 96, 0.5); }
-  }
-
-  .btn-follow {
-    padding: var(--space-xs) var(--space-2xl);
-    border: 1px solid var(--spotify-text-subdued);
-    border-radius: var(--radius-pill);
-    color: var(--spotify-text-primary);
-    font: var(--text-button);
-    background: transparent;
-    transition: border-color 0.2s ease, color 0.2s ease;
-  }
-
-  .btn-follow:hover { border-color: var(--spotify-text-primary); }
-  .btn-follow.following {
-    border-color: var(--spotify-green);
-    color: var(--spotify-green);
-  }
-
-  .btn-more {
-    font: var(--text-display-md);
-    color: var(--spotify-text-subdued);
-    letter-spacing: 2px;
-    transition: color 0.2s ease;
-  }
-
-  .btn-more:hover { color: var(--spotify-text-primary); }
-
-  /* ── Sections ─────────────────────────────────────────────────── */
-  .section { margin-bottom: var(--space-4xl); }
-
-  .section-title {
-    font: var(--text-display-sm);
-    color: var(--spotify-text-primary);
-    margin-bottom: var(--space-xl);
-  }
-
-  /* ── Track list ───────────────────────────────────────────────── */
-  .track-list { display: flex; flex-direction: column; }
-
-  .track-row {
-    display: grid;
-    grid-template-columns: 48px 1fr 40px;
-    align-items: center;
-    padding: var(--space-sm) var(--space-lg);
-    border-radius: var(--radius-sm);
-    transition: background 0.2s ease;
-    cursor: default;
-    position: relative;
-  }
-
-  .track-row:hover {
-    background: rgba(255,255,255,0.06);
-  }
-
-  .track-row:hover .track-name { color: var(--spotify-green); }
-
-  .track-num {
-    width: 48px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  .track-num-text {
-    font: var(--text-body);
-    color: var(--spotify-text-subdued);
-    transition: opacity 0.15s ease;
-  }
-
-  .track-row:hover .track-num-text { opacity: 0; }
-
-  .track-play-icon {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--spotify-green);
-    opacity: 0;
-    transform: scale(0.6);
-    transition: opacity 0.15s ease, transform 0.15s ease;
-  }
-
-  .track-row:hover .track-play-icon {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  /* ── Equalizer bars (like Spotify's now-playing) ──────────────── */
-  .track-eq {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 2px;
-    padding-bottom: 10px;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-
-  .track-row:hover .track-eq { opacity: 1; }
-  .track-row:hover .track-play-icon { display: none; }
-  .track-row:hover .track-eq .eq-bar { animation-play-state: running; }
-
-  .eq-bar {
-    width: 3px;
-    background: var(--spotify-green);
-    border-radius: 2px;
-    animation: eqBounce 0.8s ease-in-out infinite;
-    animation-play-state: paused;
-  }
-
-  .eq-bar:nth-child(1) { height: 10px; animation-delay: 0s; }
-  .eq-bar:nth-child(2) { height: 16px; animation-delay: 0.15s; }
-  .eq-bar:nth-child(3) { height: 8px; animation-delay: 0.05s; }
-
-  @keyframes eqBounce {
-    0%, 100% { transform: scaleY(1); }
-    50% { transform: scaleY(0.4); }
-  }
-
-  .track-info { display: flex; flex-direction: column; gap: 2px; }
-
-  .track-name {
-    font: var(--text-body);
-    color: var(--spotify-text-primary);
-    transition: color 0.15s ease;
-  }
-
-  .track-plays {
-    font: var(--text-body-sm);
-    color: var(--spotify-text-subdued);
-  }
-
-  .track-time {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    color: var(--spotify-text-subdued);
-    transition: color 0.15s ease;
-  }
-
-  .track-row:hover .track-time { color: var(--spotify-green); }
-
-  /* ── CTA ──────────────────────────────────────────────────────── */
-  .artist-cta {
-    display: flex;
-    gap: var(--space-lg);
-    margin-top: var(--space-3xl);
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--button-primary-bg);
-    color: var(--button-primary-text);
-    font: var(--text-button);
-    padding: var(--button-primary-padding);
-    border-radius: var(--button-primary-rounded);
-    text-decoration: none;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-  }
-
-  .btn-primary:hover { transform: scale(1.04); opacity: 0.9; }
-
-  .btn-outline {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    color: var(--spotify-text-primary);
-    font: var(--text-button);
-    padding: var(--space-xs) var(--space-2xl);
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--spotify-text-subdued);
-    text-decoration: none;
-    transition: border-color 0.2s ease;
-  }
-
-  .btn-outline:hover { border-color: var(--spotify-text-primary); }
-
-  @media (max-width: 768px) {
-    .artist-header { flex-direction: column; align-items: center; text-align: center; padding-top: var(--space-3xl); }
-    .artist-avatar { width: 140px; height: 140px; }
-    .artist-name { font-size: 40px; line-height: 44px; }
-    .artist-actions { justify-content: center; }
-  }
-</style>
-
-<script>
-  function initHome() {
-    const playBtn = document.getElementById('hero-play');
-    const followBtn = document.getElementById('btn-follow');
-    let playing = false;
-
-    if (playBtn && !playBtn.dataset.ready) {
-      playBtn.dataset.ready = '1';
-      playBtn.addEventListener('click', () => {
-        playing = !playing;
-        playBtn.classList.toggle('playing', playing);
-        playBtn.innerHTML = playing
-          ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
-          : '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-      });
-    }
-
-    if (followBtn && !followBtn.dataset.ready) {
-      followBtn.dataset.ready = '1';
-      followBtn.addEventListener('click', () => {
-        const following = followBtn.classList.toggle('following');
-        followBtn.textContent = following ? 'Siguiendo' : 'Seguir';
-      });
-    }
-  }
-
-  document.addEventListener('astro:page-load', initHome);
-  initHome();
-</script>
+  </footer>
+</BaseLayout>

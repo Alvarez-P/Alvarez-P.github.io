@@ -1,0 +1,95 @@
+---
+---
+
+<div class="comet" data-comet aria-hidden="true">
+  <div class="comet__streak">
+    <span class="comet__head"></span>
+  </div>
+</div>
+
+<style>
+  .comet {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    margin-left: -50vw;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .comet__streak {
+    position: absolute;
+    top: -8%;
+    right: -12%;
+    width: 280px;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      rgba(227, 230, 238, 0.9),
+      rgba(138, 166, 214, 0.45) 40%,
+      rgba(138, 166, 214, 0.12) 70%,
+      transparent
+    );
+    opacity: 0;
+  }
+
+  .comet__head {
+    position: absolute;
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #f2f4f9;
+    box-shadow:
+      0 0 8px 1px rgba(238, 241, 247, 0.9),
+      0 0 20px 5px rgba(138, 166, 214, 0.55),
+      0 0 40px 12px rgba(122, 143, 194, 0.25);
+  }
+
+  .comet.is-active .comet__streak {
+    animation: comet-cross 3.2s cubic-bezier(0.4, 0, 0.7, 0.3) forwards;
+  }
+
+  @keyframes comet-cross {
+    0% {
+      transform: translate(0, 0) rotate(-20deg);
+      opacity: 0;
+    }
+    6% {
+      opacity: 1;
+    }
+    88% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-130vw, 47vw) rotate(-20deg);
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  const comet = document.querySelector('[data-comet]');
+  if (
+    comet &&
+    'IntersectionObserver' in window &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          comet.classList.add('is-active');
+          io.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    io.observe(comet);
+  }
+</script>
