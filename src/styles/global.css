@@ -213,6 +213,14 @@
   transform: none;
 }
 
+.hero-content {
+  transition: opacity 0.45s ease;
+}
+
+.solar-transitioning .hero-content {
+  opacity: 0;
+}
+
 /* Respect reduced motion globally: kill CSS transitions/animations and reveal instantly. */
 @media (prefers-reduced-motion: reduce) {
   *,

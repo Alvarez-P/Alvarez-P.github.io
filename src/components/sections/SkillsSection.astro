@@ -1,11 +1,13 @@
 ---
-import SectionHeader from './SectionHeader.astro';
+import SectionHeader from './SectionHeader';
 import AsteroidBelt from './AsteroidBelt.astro';
 import SkillsTabs from './SkillsTabs.tsx';
 ---
 
 <section id="skills" class="scroll-mt-16 py-24">
   <SectionHeader
+    client:load
+    icon="skills"
     eyebrow="Skills"
     title="Stack tecnológico"
     description="Tecnologías y herramientas con las que diseño, construyo y opero sistemas, organizadas por dominio."

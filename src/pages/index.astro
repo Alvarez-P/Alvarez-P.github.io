@@ -2,8 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/layout/Nav.astro';
 import Starfield from '../components/animations/Starfield.astro';
-import Constellation from '../components/sections/Constellation.astro';
-import SectionHeader from '../components/sections/SectionHeader.astro';
+import SectionHeader from '../components/sections/SectionHeader';
+import HeroSolarSystem from '../components/solar/HeroSolarSystem';
 import Comet from '../components/sections/Comet.astro';
 import SkillsSection from '../components/sections/SkillsSection.astro';
 import ExperienceStack from '../components/sections/ExperienceStack';
@@ -55,10 +55,13 @@ const especialidades = [
   <Nav />
 
   <main class="mx-auto max-w-5xl px-5">
-    <section id="hero" class="relative flex min-h-screen flex-col justify-center py-24">
-      <Constellation />
+    <section id="hero" class="relative flex min-h-screen items-center py-24">
+      <div class="absolute inset-y-0 right-0 flex items-center lg:translate-x-20 xl:translate-x-48">
+        <HeroSolarSystem client:load />
+      </div>
 
-      <div class="space-y-6">
+      <div class="hero-content pointer-events-none relative z-10 w-full">
+        <div class="space-y-6">
         <p class="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
           <span class="text-muted-foreground/70">{site.location}</span>
           <span class="mx-2" aria-hidden="true">·</span>
@@ -88,13 +91,14 @@ const especialidades = [
           con arquitecturas simples y mantenibles.
         </p>
 
-        <div class="flex flex-wrap gap-3 pt-2">
+        <div class="pointer-events-auto flex flex-wrap gap-3 pt-2">
           <a href="#proyectos" class={buttonVariants()}>Ver proyectos</a>
           <a href="#contacto" class={buttonVariants({ variant: 'outline' })}>Contacto</a>
         </div>
 
-        <div class="pt-10">
+        <div class="pointer-events-auto pt-10">
           <SocialAvatars client:load />
+        </div>
         </div>
       </div>
     </section>
@@ -102,6 +106,8 @@ const especialidades = [
     <section id="sobre-mi" class="relative scroll-mt-16 py-24">
       <Comet />
       <SectionHeader
+        client:load
+        icon="sobre-mi"
         eyebrow="Sobre mí"
         title="Quién soy"
         description="Perfil, especialidades y forma de trabajar."
@@ -217,6 +223,8 @@ const especialidades = [
 
     <section id="experiencia" class="scroll-mt-16 py-24">
       <SectionHeader
+        client:load
+        icon="experiencia"
         eyebrow="Experiencia"
         title="Trayectoria"
         description="Carrera profesional, roles y responsabilidades."
@@ -240,6 +248,8 @@ const especialidades = [
 
     <section id="proyectos" class="scroll-mt-16 py-24">
       <SectionHeader
+        client:load
+        icon="proyectos"
         eyebrow="Proyectos"
         title="Casos de estudio"
         description="Proyectos destacados con métricas e impacto."
@@ -264,6 +274,8 @@ const especialidades = [
 
     <section id="contacto" class="scroll-mt-16 py-24">
       <SectionHeader
+        client:load
+        icon="contacto"
         eyebrow="Contacto"
         title="Hablemos"
         description="Disponible para colaborar. Respondo en menos de 24 horas."

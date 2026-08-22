@@ -1,0 +1,235 @@
+.sun {
+  --sun-diameter: 46px;
+  --sun-aura: 210px;
+  position: relative;
+  width: calc(var(--sun-diameter) * 1.9);
+  height: calc(var(--sun-diameter) * 1.9);
+  cursor: default;
+}
+
+@media (max-width: 480px) {
+  .sun {
+    --sun-diameter: 38px;
+    --sun-aura: 160px;
+  }
+}
+
+.sun__aura {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--sun-aura);
+  height: var(--sun-aura);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(227, 230, 238, 0.42) 0%,
+    rgba(227, 230, 238, 0.14) 32%,
+    rgba(227, 230, 238, 0.05) 58%,
+    transparent 72%
+  );
+  animation: sun-aura-breathe 9s ease-in-out infinite;
+}
+
+.sun__aura::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(227, 230, 238, 0.12) 0%, transparent 65%);
+  animation: sun-aura-halo 13s ease-in-out infinite;
+}
+
+@keyframes sun-aura-breathe {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(0.97);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.03);
+  }
+}
+
+@keyframes sun-aura-halo {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.sun__surface {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--sun-diameter);
+  height: var(--sun-diameter);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 50% 44%,
+    #f6f8fc 0%,
+    #e9ecf4 40%,
+    #d6dce8 75%,
+    #c3cbd9 100%
+  );
+}
+
+.sun__texture {
+  position: absolute;
+  inset: -35%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.sun__texture--1 {
+  background:
+    radial-gradient(circle at 30% 38%, rgba(255, 255, 255, 0.5) 0%, transparent 16%),
+    radial-gradient(circle at 68% 58%, rgba(255, 255, 255, 0.4) 0%, transparent 14%),
+    radial-gradient(circle at 42% 78%, rgba(190, 200, 220, 0.35) 0%, transparent 18%),
+    radial-gradient(circle at 72% 26%, rgba(255, 255, 255, 0.3) 0%, transparent 12%);
+  animation: sun-texture-drift-a 22s ease-in-out infinite alternate;
+}
+
+.sun__texture--2 {
+  background:
+    radial-gradient(circle at 55% 30%, rgba(255, 255, 255, 0.35) 0%, transparent 15%),
+    radial-gradient(circle at 25% 65%, rgba(210, 220, 235, 0.3) 0%, transparent 20%),
+    radial-gradient(circle at 60% 70%, rgba(255, 255, 255, 0.45) 0%, transparent 13%);
+  animation: sun-texture-drift-b 30s ease-in-out infinite alternate;
+}
+
+@keyframes sun-texture-drift-a {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-3%, 2%, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(2%, -3%, 0) scale(1);
+  }
+}
+
+@keyframes sun-texture-drift-b {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.04);
+  }
+  50% {
+    transform: translate3d(3%, -2%, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(-2%, 2%, 0) scale(1.06);
+  }
+}
+
+.sun__plasma {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.sun__plasma--1 {
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(255, 255, 255, 0.28) 0deg,
+    transparent 70deg,
+    rgba(255, 255, 255, 0.18) 130deg,
+    transparent 190deg,
+    rgba(255, 255, 255, 0.24) 260deg,
+    transparent 320deg
+  );
+  animation: sun-plasma-spin-a 34s linear infinite;
+}
+
+.sun__plasma--2 {
+  background: conic-gradient(
+    from 40deg at 50% 50%,
+    rgba(255, 255, 255, 0.2) 0deg,
+    transparent 90deg,
+    rgba(255, 255, 255, 0.14) 180deg,
+    transparent 240deg,
+    rgba(255, 255, 255, 0.2) 300deg,
+    transparent 360deg
+  );
+  animation: sun-plasma-spin-b 48s linear infinite reverse;
+}
+
+@keyframes sun-plasma-spin-a {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sun-plasma-spin-b {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.sun__flare {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--angle));
+  pointer-events: none;
+}
+
+.sun__flare i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: calc(9px * var(--size));
+  height: calc(24px * var(--size));
+  border-radius: 50% 50% 45% 45% / 70% 70% 30% 30%;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.55), transparent 78%);
+  opacity: 0;
+  animation: sun-flare var(--dur) ease-in-out var(--delay) infinite;
+}
+
+@keyframes sun-flare {
+  0%,
+  100% {
+    transform: translate(-50%, calc(var(--sun-diameter) / -2 + 3px)) scaleY(0.25);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, calc(var(--sun-diameter) / -2 + 3px)) scaleY(1.15) rotate(3deg);
+    opacity: 0.75;
+  }
+  75% {
+    opacity: 0.35;
+  }
+}
+
+.sun:hover .sun__surface {
+  filter: brightness(1.06);
+}
+
+.sun:hover .sun__aura {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sun__texture,
+  .sun__plasma,
+  .sun__flare i,
+  .sun__aura,
+  .sun__aura::after {
+    animation: none !important;
+  }
+}
