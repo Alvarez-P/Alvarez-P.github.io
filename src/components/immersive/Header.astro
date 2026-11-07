@@ -1,0 +1,115 @@
+---
+
+const links = [
+  { href: '#experiencia', label: 'Experiencia' },
+  { href: '#proyectos', label: 'Proyectos' },
+  { href: '#stack', label: 'Stack' },
+  { href: '#contacto', label: 'Contacto' },
+];
+---
+
+<header class="bar">
+  <a href="#top" class="brand"><span style="color:var(--domain)">●</span> esteban.alvarez</a>
+  <nav aria-label="Principal">
+    {links.map((l) => <a href={l.href}>{l.label}</a>)}
+  </nav>
+  <button id="theme-toggle" type="button" class="imm-icon-btn" aria-label="Cambiar de tema" title="Cambiar de tema" data-event="ThemeChanged">
+    <svg class="imm-ic when-dark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="imm-ic when-light" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+  </button>
+</header>
+
+<style>
+  .bar { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; padding: 14px 32px; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 72%, transparent); backdrop-filter: blur(12px); }
+  .brand { font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.04em; color: var(--ink); text-decoration: none; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 15px; }
+  nav a { color: var(--muted); text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  :global(:root[data-theme='light']) .when-dark, :global(:root:not([data-theme='light'])) .when-light { display: none; }
+</style>
+
+<script>
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const root = document.documentElement;
+    const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch { /* sin almacenamiento: solo esta sesión */ }
+  });
+
+  const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const CHIP_MS = 2000;
+
+  // Chip flotante con el nombre del evento, que sale del botón y se desvanece.
+  function launchChip(el: HTMLElement) {
+    const r = el.getBoundingClientRect();
+    const chip = document.createElement('div');
+    chip.className = 'event-chip';
+    chip.textContent = el.dataset.event ?? '';
+    chip.style.left = `${r.left + r.width / 2}px`;
+    chip.style.top = `${r.top}px`;
+    document.body.appendChild(chip);
+    // en la cabecera no hay sitio arriba: el evento sale hacia abajo
+    const dir = r.top < 140 ? 1 : -1;
+    const at = (y: number) => `translate(-50%, ${dir * y}px)`;
+    const rise = reduceMotion() ? 0 : 1;
+    chip.animate(
+      [
+        { opacity: 0, transform: `${at(0)} scale(0.8)` },
+        { opacity: 1, transform: `${at(34 * rise)} scale(1)`, offset: 0.15 },
+        { opacity: 1, transform: at(80 * rise), offset: 0.75 },
+        { opacity: 0, transform: at(110 * rise) },
+      ],
+      { duration: CHIP_MS, easing: 'ease-out' },
+    ).onfinish = () => chip.remove();
+  }
+
+  // Scroll lento hacia un ancla: la duración crece con la distancia. Cualquier gesto del usuario lo cancela.
+  let scrolling = false;
+  function slowScrollTo(target: HTMLElement) {
+    if (scrolling) return;
+    const from = window.scrollY;
+    const to = target.getBoundingClientRect().top + from - 80;
+    const dist = Math.abs(to - from);
+    if (dist < 4) return;
+    if (reduceMotion()) { window.scrollTo({ top: to, behavior: 'instant' }); return; }
+    const dur = Math.min(9000, Math.max(2500, dist * 0.7));
+    const t0 = performance.now();
+    scrolling = true;
+    const abort = () => { scrolling = false; };
+    ['wheel', 'touchstart', 'keydown'].forEach((ev) => window.addEventListener(ev, abort, { once: true, passive: true }));
+    const tick = (now: number) => {
+      if (!scrolling) return;
+      const k = Math.min(1, (now - t0) / dur);
+      const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      window.scrollTo({ top: from + (to - from) * e, behavior: 'instant' });
+      if (k < 1) requestAnimationFrame(tick); else scrolling = false;
+    };
+    requestAnimationFrame(tick);
+  }
+
+  document.addEventListener('click', (e) => {
+    const el = (e.target as Element).closest<HTMLElement>('[data-event]');
+    if (!el) return;
+    const plain = e.button === 0 && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey;
+    if (el.dataset.delayNav !== undefined && plain && el instanceof HTMLAnchorElement) {
+      // enlaces externos: se muestra el chip y se redirige a mano tras 2 s
+      e.preventDefault();
+      if (el.dataset.busy) return;
+      el.dataset.busy = '1';
+      launchChip(el);
+      setTimeout(() => {
+        delete el.dataset.busy;
+        // Con 'noopener' window.open siempre devuelve null, y no se podría distinguir un bloqueo.
+        // Se abre sin él y se corta el vínculo a mano; si el navegador lo bloquea, se navega en esta pestaña.
+        const tab = window.open(el.href, '_blank');
+        if (tab) tab.opener = null;
+        else window.location.href = el.href;
+      }, CHIP_MS);
+      return;
+    }
+    launchChip(el);
+    if (el.dataset.scrollSlow !== undefined && plain && el instanceof HTMLAnchorElement) {
+      const target = document.querySelector<HTMLElement>(el.getAttribute('href') ?? '');
+      if (target) { e.preventDefault(); slowScrollTo(target); }
+    }
+  });
+</script>

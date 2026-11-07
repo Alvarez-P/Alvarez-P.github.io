@@ -8,10 +8,11 @@ import { site } from '../data/site';
 
 const {
   title,
-  description = `${site.name} — ${site.role}. Portafolio minimalista de temática espacial.`,
+  description = `${site.name} — ${site.role}. Backend, arquitectura y sistemas orientados a eventos.`,
 } = Astro.props;
 
 import '../styles/global.css';
+import '../styles/immersive.css';
 ---
 
 <!doctype html>
@@ -25,6 +26,11 @@ import '../styles/global.css';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <script is:inline>
       document.documentElement.classList.add('js');
+      try {
+        var t = localStorage.getItem('theme');
+        if (t !== 'light' && t !== 'dark') t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.dataset.theme = t;
+      } catch (e) {}
     </script>
   </head>
   <body>

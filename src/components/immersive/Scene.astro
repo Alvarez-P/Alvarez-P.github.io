@@ -1,0 +1,319 @@
+---
+import { Icon } from 'astro-icon/components';
+import { site } from '../../data/site';
+import { roles, earlierWork, projects, stack, learning } from '../../data/portfolio';
+
+// Cada letra entra con su retardo; las palabras no se parten al saltar de línea.
+let n = 0;
+const nameLines = [['ADOLFO', 'ESTEBAN'], ['ÁLVAREZ', 'PACHECO']].map((line) =>
+  line.map((word) => word.split('').map((c) => ({ c, delay: (0.1 + n++ * 0.04).toFixed(2) }))),
+);
+// '118,174+' -> 118174 + '+': el contador anima el número y conserva el sufijo.
+const parseMetric = (v: string) => {
+  const m = v.match(/^([\d,]+)(.*)$/);
+  return { n: m ? Number(m[1].replace(/,/g, '')) : 0, suffix: m ? m[2] : '' };
+};
+const layerVar = { domain: '--domain', app: '--app', infra: '--infra' } as const;
+---
+
+<!-- La cámara sale del núcleo: un anillo concéntrico (capa) por sección. El scroll controla el zoom. -->
+<div id="scene" class="scene">
+  <div id="experiencia" class="marker" style="--at:0.27"></div>
+  <div id="proyectos" class="marker" style="--at:0.52"></div>
+  <div id="stack" class="marker" style="--at:0.77"></div>
+
+  <div id="stage" class="stage">
+    <div class="diagram heavy">
+      <svg id="dg" viewBox="160 160 40 40" role="img" aria-label="Diagrama de capas concéntricas: dominio, aplicación e infraestructura">
+        <g class="spokes">
+          <line x1="180" y1="180" x2="180" y2="-52" />
+          <line x1="180" y1="180" x2="180" y2="412" />
+          <line x1="180" y1="180" x2="412" y2="180" />
+          <line x1="180" y1="180" x2="-52" y2="180" />
+          <line x1="180" y1="180" x2="344" y2="16" />
+          <line x1="180" y1="180" x2="16" y2="344" />
+          <line x1="180" y1="180" x2="16" y2="16" />
+          <line x1="180" y1="180" x2="344" y2="344" />
+        </g>
+        <circle class="ring-out" cx="180" cy="180" r="232" />
+        <circle class="ring ring-infra" cx="180" cy="180" r="150" />
+        <circle class="ring ring-app" cx="180" cy="180" r="106" />
+        <circle class="ring ring-domain" cx="180" cy="180" r="62" />
+        <g class="orbit o1"><circle class="dotA c-domain" cx="180" cy="118" /><circle class="dotB c-domain" cx="180" cy="242" /></g>
+        <g class="orbit o2"><circle class="dotA c-app" cx="180" cy="74" /><circle class="dotB c-app" cx="286" cy="180" /></g>
+        <g class="orbit o3"><circle class="dotA c-infra" cx="180" cy="30" /><circle class="dotB c-infra" cx="74" cy="180" /><circle class="dotB c-infra" cx="180" cy="330" /></g>
+        <circle class="core" cx="180" cy="180" r="18" />
+      </svg>
+    </div>
+
+    <!-- 0 · Núcleo -->
+    <div class="panel p0">
+      <div class="panel-in">
+        <div class="fadeup imm-eyebrow" style="color:var(--domain)">Núcleo · Mérida, México · disponible</div>
+        <h1 class="name" aria-label="Adolfo Esteban Álvarez Pacheco">
+          {nameLines.map((line) => (
+            <span class="line" aria-hidden="true">
+              {line.map((word) => (
+                <span class="word">{word.map((l) => <span class="ltr" style={`animation-delay:${l.delay}s`}>{l.c}</span>)}</span>
+              ))}
+            </span>
+          ))}
+        </h1>
+        <p class="fadeup lead" style="animation-delay:.9s">Senior Backend Engineer | Full Stack Developer</p>
+        <p class="fadeup sub" style="animation-delay:.85s">6+ años con Node.js, TypeScript, NestJS y AWS. Microservicios, Clean Architecture, DDD; IA aplicada con SDD y ODD.</p>
+        <div class="fadeup actions" style="animation-delay:1s">
+          <a href="#contacto" class="imm-btn" data-event="CvRequested" data-scroll-slow><svg class="imm-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>Conseguir mi CV</a>
+          <a href={site.social.github} class="imm-icon-btn" aria-label="GitHub" title="GitHub" data-event="GitHubRequested" data-delay-nav><Icon name="simple-icons:github" class="imm-ic-fill" /></a>
+          <a href={site.social.linkedin} class="imm-icon-btn" aria-label="LinkedIn" title="LinkedIn" data-event="LinkedInRequested" data-delay-nav><Icon name="simple-icons:linkedin" class="imm-ic-fill" /></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1 · Experiencia = Dominio -->
+    <div class="panel p1">
+      <div class="panel-in">
+        <div class="imm-eyebrow" style="color:var(--domain)">Capa 01 · Dominio</div>
+        <h2 class="h2">Lo que he construido</h2>
+        {roles.map((r, i) => (
+          <article class="card" style={`--i:${i}`}>
+            <div class="card-head"><h3>{r.title}</h3><span class="mono-s">{r.period}</span></div>
+            <div class="metrics">
+              {r.metrics.map((m) => (
+                <div><div class="metric" data-count={parseMetric(m.value).n} data-suffix={parseMetric(m.value).suffix}>{m.value}</div><div class="metric-l">{m.label}</div></div>
+              ))}
+            </div>
+            <p class="note">{r.note}</p>
+          </article>
+        ))}
+        <p class="muted-s earlier">{earlierWork}</p>
+      </div>
+    </div>
+
+    <!-- 2 · Proyectos = Aplicación -->
+    <div class="panel p2">
+      <div class="panel-in">
+        <div class="imm-eyebrow" style="color:var(--app)">Capa 02 · Aplicación</div>
+        <h2 class="h2">Proyectos propios</h2>
+        {projects.map((p, i) => (
+          <article class="card" style={`--i:${i}`}>
+            <div class="card-head baseline"><h3 class="proj">{p.name}</h3><span class="status">{p.status}</span></div>
+            <p class="muted-s">{p.desc}</p>
+            <div class="mono-s tech">{p.tech}</div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- 3 · Stack = Infraestructura -->
+    <div class="panel p3">
+      <div class="panel-in">
+        <div class="imm-eyebrow" style="color:var(--infra)">Capa 03 · Infraestructura</div>
+        <h2 class="h2">Stack</h2>
+        <div class="card stack">
+          <div class="stack-grid">
+            {stack.map((g) => (
+              <div>
+                <div class="muted-s group">{g.title}</div>
+                <div class="chips">
+                  {g.items.map((t, i) => <span class="chip" style={`--i:${i};border-color:var(${layerVar[g.layer]})`}>{t}</span>)}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div class="muted-s">{learning}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 · Salida -->
+    <div class="panel p4">
+      <div class="panel-in">
+        <div class="imm-eyebrow">Puerto de salida</div>
+        <h2 class="h2 big">El sistema completo</h2>
+        <p class="closing">Dominio protegido, casos de uso claros e infraestructura reproducible. Así trabajo, y así puedo trabajar en tu equipo.</p>
+        <div class="closing-cta"><a href="#contacto" class="imm-btn" data-event="ContactOpened" data-scroll-slow>Hablemos<svg class="imm-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a></div>
+      </div>
+    </div>
+
+    <div class="heavy rail">
+      <span style="color:var(--ink);opacity:calc(.35 + .65 * var(--o0,1))">Núcleo</span>
+      <span style="color:var(--domain);opacity:calc(.35 + .65 * var(--o1,0))">Dominio</span>
+      <span style="color:var(--app);opacity:calc(.35 + .65 * var(--o2,0))">Aplicación</span>
+      <span style="color:var(--infra);opacity:calc(.35 + .65 * var(--o3,0))">Infraestructura</span>
+      <span style="color:var(--ink);opacity:calc(.35 + .65 * var(--o4,0))">Salida</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes spinr { to { transform: rotate(-360deg); } }
+  @keyframes pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+  @keyframes letter { from { opacity: 0; transform: translateY(0.6em) rotateX(70deg); } to { opacity: 1; transform: none; } }
+  @keyframes fadeup { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+  .scene { position: relative; height: 1100vh; }
+  .marker { position: absolute; top: calc((100% - 100vh) * var(--at)); height: 1px; scroll-margin-top: 0; }
+  .stage { position: sticky; top: 0; height: 100vh; overflow: hidden; --p: 0; --s: 9; --rot: 0deg; }
+
+  .diagram { position: absolute; left: 72%; top: 50%; width: 90vh; height: 90vh; transform: translate(-50%, -50%) rotate(var(--rot)); }
+  .diagram svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .spokes line { stroke: var(--line); stroke-width: 1px; vector-effect: non-scaling-stroke; opacity: 0.7; }
+  .ring-out { fill: none; stroke: var(--ink); stroke-width: 1px; vector-effect: non-scaling-stroke; stroke-dasharray: 2 12; stroke-opacity: calc(0.25 + 0.6 * var(--all, 0)); }
+  .ring { stroke-width: 2.5px; vector-effect: non-scaling-stroke; }
+  .ring-infra { fill: var(--infra); stroke: var(--infra); fill-opacity: calc(0.02 + 0.09 * var(--fi, 0)); stroke-opacity: calc(0.2 + 0.8 * var(--fi, 0)); }
+  .ring-app { fill: var(--app); stroke: var(--app); fill-opacity: calc(0.02 + 0.1 * var(--fa, 0)); stroke-opacity: calc(0.2 + 0.8 * var(--fa, 0)); }
+  .ring-domain { fill: var(--domain); stroke: var(--domain); fill-opacity: calc(0.03 + 0.12 * var(--fd, 0)); stroke-opacity: calc(0.2 + 0.8 * var(--fd, 0)); }
+  .c-domain { fill: var(--domain); }
+  .c-app { fill: var(--app); }
+  .c-infra { fill: var(--infra); }
+  .orbit { transform-origin: 180px 180px; }
+  .o1 { animation: spin 14s linear infinite; }
+  .o2 { animation: spinr 22s linear infinite; }
+  .o3 { animation: spin 34s linear infinite; }
+  .dotA { r: calc(5px / var(--s, 1)); }
+  .dotB { r: calc(3px / var(--s, 1)); }
+  .core { fill: var(--ink); animation: pulse 2.6s ease-in-out infinite; }
+
+  .panel { position: absolute; inset: 0; display: flex; align-items: center; padding: 84px 6vw 100px; box-sizing: border-box; will-change: transform, opacity; }
+  .panel-in { width: min(620px, 46vw); min-width: 0; }
+  .p0 { opacity: var(--o0, 1); transform: translateY(var(--y0, 0px)); pointer-events: var(--pe0, auto); }
+  .p1 { opacity: var(--o1, 0); transform: translateY(var(--y1, 60px)); pointer-events: var(--pe1, none); }
+  .p2 { opacity: var(--o2, 0); transform: translateY(var(--y2, 60px)); pointer-events: var(--pe2, none); }
+  .p3 { opacity: var(--o3, 0); transform: translateY(var(--y3, 60px)); pointer-events: var(--pe3, none); }
+  .p4 { opacity: var(--o4, 0); transform: translateY(var(--y4, 60px)); pointer-events: var(--pe4, none); }
+
+  .name { margin: 16px 0 0; font-size: clamp(40px, 5vw, 68px); line-height: 0.98; font-weight: 700; letter-spacing: -0.035em; perspective: 600px; }
+  .line { display: block; }
+  .word { display: inline-block; white-space: nowrap; margin-right: 0.25em; }
+  .ltr { display: inline-block; animation: letter 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .fadeup { animation: fadeup 0.8s ease both; }
+  .lead { margin: 22px 0 0; font-size: 22px; line-height: 1.4; font-weight: 500; }
+  .sub { margin: 14px 0 0; font-size: 16px; line-height: 1.55; color: var(--muted); max-width: 46ch; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+
+  .h2 { margin: 10px 0 18px; font-size: 40px; letter-spacing: -0.02em; }
+  .h2.big { font-size: 48px; line-height: 1.05; letter-spacing: -0.025em; margin-bottom: 14px; }
+  .card { margin-bottom: 14px; padding: 20px 22px; border: 1px solid var(--line); border-radius: 18px; background: color-mix(in srgb, var(--panel) 94%, transparent); opacity: 0; transform: translateY(26px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.25s ease; }
+  .panel.in .card { opacity: 1; transform: none; transition-delay: calc(var(--i, 0) * 110ms + 120ms); }
+  .panel.in .card:hover { transform: translateY(-4px); border-color: var(--ink); transition-delay: 0s; }
+  .card-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; }
+  .card-head.baseline { align-items: baseline; }
+  .card h3 { margin: 0; font-size: 20px; }
+  .card h3.proj { font-size: 22px; }
+  .mono-s { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  .tech { margin-top: 10px; color: var(--ink); }
+  .status { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--app); }
+  .muted-s { margin: 6px 0 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+  .metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+  .metric { font-size: 30px; font-weight: 700; color: var(--domain); letter-spacing: -0.02em; }
+  .metric-l { font-size: 13px; color: var(--muted); }
+  .note { margin: 12px 0 0; font-size: 14px; line-height: 1.5; }
+  .earlier { margin-top: 14px; }
+
+  .stack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px 20px; margin-bottom: 16px; }
+  .group { margin: 0 0 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { padding: 5px 10px; border-radius: 999px; border: 1px solid; font-size: 12px; font-family: var(--font-mono); opacity: 0; transform: scale(0.8); transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), background 0.2s ease; }
+  .panel.in .chip { opacity: 1; transform: none; transition-delay: calc(var(--i, 0) * 35ms + 250ms); }
+  .panel.in .chip:hover { transform: translateY(-2px) scale(1.05); background: var(--line); transition-delay: 0s; }
+
+  .closing { margin: 0; color: var(--muted); line-height: 1.6; font-size: 17px; max-width: 40ch; }
+  .closing-cta { margin-top: 28px; }
+
+  .rail { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; gap: 18px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* Móvil y movimiento reducido: sin zoom, secciones apiladas. */
+  @media (max-width: 900px) {
+    .scene { height: auto; }
+    .stage { position: static; height: auto; overflow: visible; }
+    .heavy { display: none; }
+    .panel { position: relative; opacity: 1 !important; transform: none !important; pointer-events: auto !important; padding: 56px 24px; }
+    .panel-in { width: 100%; }
+    .card, .chip { opacity: 1 !important; transform: none !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scene { height: auto; }
+    .stage { position: static; height: auto; overflow: visible; }
+    .heavy { display: none; }
+    .panel { position: relative; opacity: 1 !important; transform: none !important; pointer-events: auto !important; padding: 56px 24px; }
+    .panel-in { width: min(620px, 100%); }
+    .core, .ltr, .fadeup, .bob, .o1, .o2, .o3 { animation: none; }
+    .card, .chip { opacity: 1 !important; transform: none !important; transition: none; }
+  }
+</style>
+
+<script>
+  const scene = document.getElementById('scene');
+  const stage = document.getElementById('stage');
+  const dg = document.getElementById('dg');
+  const clamp = (v: number) => Math.min(1, Math.max(0, v));
+  const CENTERS = [0, 0.27, 0.52, 0.77, 1];
+  const HALVES = [0.12, 0.11, 0.11, 0.11, 0.12];
+  let raf = 0;
+
+  const counters = Array.from(document.querySelectorAll<HTMLElement>('[data-count]'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('.panel'));
+  const isStatic = () => matchMedia('(max-width: 900px), (prefers-reduced-motion: reduce)').matches;
+  const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
+  const suffixOf = (el: HTMLElement) => el.dataset.suffix ?? '';
+  const zeroCounters = () => counters.forEach((el) => { el.textContent = '0' + suffixOf(el); });
+  let counting = false;
+  let countersIn = false;
+
+  function countUp() {
+    if (counting) return;
+    counting = true;
+    const t0 = performance.now();
+    const tick = (now: number) => {
+      const k = Math.min(1, Math.max(0, (now - t0 - 250) / 1400));
+      const e = 1 - Math.pow(1 - k, 3);
+      counters.forEach((el) => { el.textContent = fmt(Number(el.dataset.count) * e) + suffixOf(el); });
+      if (k < 1) requestAnimationFrame(tick); else counting = false;
+    };
+    requestAnimationFrame(tick);
+  }
+
+  function update() {
+    raf = 0;
+    if (!scene || !stage || isStatic()) return;
+    const r = scene.getBoundingClientRect();
+    const vh = window.innerHeight || 800;
+    const p = clamp(-r.top / Math.max(1, r.height - vh));
+    const vis = (c: number, h: number) => clamp((h - Math.abs(p - c)) / (h * 0.35));
+    const set = (k: string, v: string) => stage.style.setProperty(k, v);
+    // el zoom se aplica al viewBox para que el SVG se vuelva a dibujar nítido, sin capas gigantes
+    const s = 9 * Math.pow(1 / 9, p);
+    set('--s', s.toFixed(3));
+    set('--rot', (p * 120).toFixed(1) + 'deg');
+    if (dg) {
+      const v = 360 / s;
+      const o = 180 - v / 2;
+      dg.setAttribute('viewBox', `${o.toFixed(2)} ${o.toFixed(2)} ${v.toFixed(2)} ${v.toFixed(2)}`);
+    }
+    CENTERS.forEach((c, i) => {
+      const o = vis(c, HALVES[i]);
+      set('--o' + i, o.toFixed(3));
+      set('--y' + i, ((c - p) * 180).toFixed(1) + 'px');
+      set('--pe' + i, o > 0.5 ? 'auto' : 'none');
+      // la clase `in` dispara las entradas escalonadas del panel; al salir se quita para repetirlas
+      if (o > 0.5) panels[i]?.classList.add('in');
+      else if (o < 0.05) panels[i]?.classList.remove('in');
+      if (i === 1) {
+        if (o > 0.5 && !countersIn) { countersIn = true; zeroCounters(); countUp(); }
+        else if (o < 0.05 && countersIn) { countersIn = false; zeroCounters(); }
+      }
+    });
+    const all = clamp((p - 0.9) / 0.08);
+    set('--all', all.toFixed(3));
+    set('--fd', Math.max(vis(0.27, 0.2), all).toFixed(3));
+    set('--fa', Math.max(vis(0.52, 0.2), all).toFixed(3));
+    set('--fi', Math.max(vis(0.77, 0.2), all).toFixed(3));
+  }
+
+  const schedule = () => { if (!raf) raf = requestAnimationFrame(update); };
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  if (!isStatic()) zeroCounters();
+  update();
+</script>

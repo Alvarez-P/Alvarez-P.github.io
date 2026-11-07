@@ -1,0 +1,160 @@
+@import "@fontsource-variable/space-grotesk";
+
+/* Tokens del diseño inmersivo. Oscuro por defecto; `data-theme="light"` lo invierte. */
+:root {
+  --bg: #0b0f14;
+  --ink: #e8edf2;
+  --muted: #9aa7b4;
+  --line: #26303b;
+  --panel: #111820;
+  --domain: #ffb547;
+  --app: #5eead4;
+  --infra: #8fa8ff;
+  --bad: #ff6b7a;
+  --font-display: 'Space Grotesk Variable', 'Geist Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+:root[data-theme='light'] {
+  --bg: #f6f4ef;
+  --ink: #12161b;
+  --muted: #4a5560;
+  --line: #d5d0c4;
+  --panel: #ffffff;
+  --domain: #a85200;
+  --app: #0b6b62;
+  --infra: #2f42c9;
+  --bad: #c42235;
+}
+
+.imm {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-display);
+  min-height: 100dvh;
+}
+
+.imm :focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.imm-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.imm-eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 2px;
+  background: currentColor;
+}
+
+.imm-btn,
+.imm-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.imm-btn {
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 600;
+  border: 0;
+}
+
+.imm-btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.imm-btn-ghost:hover {
+  border-color: var(--ink);
+}
+
+.imm-btn,
+.imm-btn-ghost { gap: 10px; }
+
+.imm-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.imm-icon-btn:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.imm-ic {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.imm-ic-fill {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Chip de "evento lanzado": sale flotando del botón y se desvanece. */
+.event-chip {
+  position: fixed;
+  z-index: 60;
+  pointer-events: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--domain);
+  background: var(--panel);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.event-chip::before {
+  content: '●';
+  margin-right: 6px;
+  color: var(--domain);
+}
+
+/* Modal de descarga: el fondo se desvanece y el panel sube y se agranda al entrar; al salir hace lo inverso. */
+@keyframes imm-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes imm-pop-in { from { opacity: 0; transform: translateY(18px) scale(0.94); } to { opacity: 1; transform: none; } }
+
+.imm-modal-bg { animation: imm-fade-in 0.2s ease both; }
+.imm-modal { animation: imm-pop-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.imm-modal-bg.imm-out { animation: imm-fade-in 0.18s ease reverse both; }
+.imm-modal.imm-out { animation: imm-pop-in 0.18s ease reverse both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .imm-modal-bg, .imm-modal { animation: none; }
+}
